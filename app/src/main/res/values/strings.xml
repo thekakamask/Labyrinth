@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Labyrinth</string>
+    <!-- Welcome Fragment -->
+    <string name="text_bouton_welcome_fragment">Play the game</string>
+    <!-- Parameters Activity -->
+    <string name="title_parameters_activity">Parameters</string>
+    <!-- Parameters Activity Tabs -->
+    <string name="header_group_example">Example header group</string>
+    <!-- Parameters Activity Tabs Elements -->
+    <string name="header_example">Header example</string>
+    <string name="description_example">Description example</string>
+    <!-- Game Fragment -->
+    <string name="title_game_fragment">Game</string>
+
+</resources>
