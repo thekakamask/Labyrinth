@@ -43,8 +43,17 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentWelcomeBinding.inflate(inflater, container, false);
+        int logoResId = getThemeLogo(getContext());
+        binding.filesExplorerImage.setImageResource(logoResId);
         return binding.getRoot();
 
+
+    }
+
+    public static int getThemeLogo(Context context) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.application_logo, typedValue, true);
+        return typedValue.resourceId;
     }
 
     @Override
