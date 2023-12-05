@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.dcac.labyrinth.WelcomeFragment" />
+        android:name="com.dcac.labyrinth.ui.welcome.WelcomeFragment" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

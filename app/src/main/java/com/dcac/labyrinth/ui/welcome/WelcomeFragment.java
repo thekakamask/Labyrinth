@@ -1,4 +1,4 @@
-package com.dcac.labyrinth;
+package com.dcac.labyrinth.ui.welcome;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
+import com.dcac.labyrinth.ui.game.GameFragment;
+import com.dcac.labyrinth.ui.parameters.ParametersActivity;
 
 /**
  * A simple {@link Fragment} subclass.

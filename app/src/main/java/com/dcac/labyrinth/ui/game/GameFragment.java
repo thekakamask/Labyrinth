@@ -1,4 +1,4 @@
-package com.dcac.labyrinth;
+package com.dcac.labyrinth.ui.game;
 
 import android.os.Bundle;
 

@@ -1,11 +1,13 @@
-package com.dcac.labyrinth;
+package com.dcac.labyrinth.ui.parameters;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ExpandableListView;
+
+import com.dcac.labyrinth.data.ParametersItem;
+import com.dcac.labyrinth.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

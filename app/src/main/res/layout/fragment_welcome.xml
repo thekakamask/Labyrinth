@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimaryDark"
-    tools:context="WelcomeFragment">
+    tools:context=".ui.welcome.WelcomeFragment">
 
     <ImageButton
         android:id="@+id/image_parameter_button"
