@@ -10,6 +10,6 @@
     <string name="header_example">Header example</string>
     <string name="description_example">Description example</string>
     <!-- Game Fragment -->
-    <string name="title_game_fragment">Game</string>
+    <string name="title_game_fragment">Labyrinth</string>
 
 </resources>
