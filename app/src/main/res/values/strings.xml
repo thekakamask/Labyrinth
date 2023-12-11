@@ -11,5 +11,9 @@
     <string name="description_example">Description example</string>
     <!-- Game Fragment -->
     <string name="title_game_fragment">Labyrinth</string>
+    <string name="button_top_arrow">Top arrow of button</string>
+    <string name="button_down_arrow">Down arrow of button</string>
+    <string name="button_left_arrow">Left arrow of button</string>
+    <string name="button_right_arrow">Right arrow of button</string>
 
 </resources>

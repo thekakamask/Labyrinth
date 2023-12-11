@@ -34,8 +34,67 @@
     <FrameLayout
         android:id="@+id/gameContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="420dp"
         android:layout_below="@id/header_parameters_activity">
     </FrameLayout>
+
+    <!-- Joystick Container -->
+    <RelativeLayout
+        android:id="@+id/gameJoystick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameContainer"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <!-- Top Button -->
+        <ImageButton
+            android:id="@+id/buttonTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/button_top_arrow"
+            android:src="@drawable/button_arrow_top"
+            android:layout_marginBottom="5dp"
+            android:layout_centerHorizontal="true"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <!-- Left Button -->
+        <ImageButton
+            android:id="@+id/buttonLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_arrow_left"
+            android:layout_marginTop="55dp"
+            android:contentDescription="@string/button_left_arrow"
+            android:layout_toLeftOf="@id/buttonTop"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <!-- Right Button -->
+        <ImageButton
+            android:id="@+id/buttonRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_arrow_right"
+            android:layout_marginTop="55dp"
+            android:contentDescription="@string/button_right_arrow"
+            android:layout_toRightOf="@id/buttonTop"
+            android:background="?android:attr/selectableItemBackground"/>
+
+        <!-- Bottom Button -->
+        <ImageButton
+            android:id="@+id/buttonBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/button_arrow_down"
+            android:layout_below="@id/buttonTop"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/button_down_arrow"
+            android:layout_alignStart="@id/buttonTop"
+            android:layout_alignEnd="@id/buttonTop"
+            android:background="?android:attr/selectableItemBackground"/>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
