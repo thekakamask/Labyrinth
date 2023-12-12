@@ -118,19 +118,32 @@ public class GameFragment extends Fragment {
 
         // BLOCKSIZE COULD BE DETERMINED BY THE SIZE OF THE GAMECONTAINER OR A PREDEFINED VALUE
         // EXAMPLE : GAMECONTAINER HAS A WIDTH OF 1080 PIXELS AND MY LABYRINTH HAS 9 BLOCKS HORIZONTALLY
-        blockSize = binding.gameContainer.getWidth() / 9; // ( OU = 1080 /9)
-
+        blockSize = binding.gameContainer.getWidth() / 20; // ( OU = 1080 /9)
         // 0 = FREE PATH , 1 = HOLE, 2 = START, 3 = ARRIVAL
         int[][] labyrinthLayout = {
-                {2, 0, 0, 0, 0, 0, 0, 0, 0},
-                {1, 0, 1, 0, 1, 0, 1, 0, 1},
-                {1, 0, 1, 0, 1, 0, 1, 1, 1},
-                {1, 0, 0, 0, 1, 0, 0, 0, 1},
-                {1, 0, 1, 0, 1, 1, 1, 0, 1},
-                {1, 0, 1, 0, 0, 0, 1, 0, 1},
-                {1, 1, 1, 1, 1, 0, 1, 0, 1},
-                {0, 0, 0, 0, 0, 0, 1, 0, 3},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1}
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                {1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ,1, 1, 1, 1, 1, 1, 1}
         };
 
 
@@ -161,10 +174,12 @@ public class GameFragment extends Fragment {
                         ball.setX(x);
                         ball.setY(y);
                         startBlock = new Block(x,y, Color.WHITE);
+                        Log.d( "GameFragment begin: ",  "x :" + x + " y :" + y );
                         break;
                     case 3:
                         blockColor = Color.RED; // FINISH ZONE COLOR
                         endBlock = new Block(x, y , blockColor);
+                        Log.d( "GameFragment finish: ",  "x :" + x + " y :" + y );
                         break;
                 }
 
@@ -202,7 +217,7 @@ public class GameFragment extends Fragment {
         binding.gameContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                blockSize = binding.gameContainer.getWidth() / 9; // ( OU = 1080 /9)
+                blockSize = binding.gameContainer.getWidth() / 20; // ( OU = 1080 /9)
                 Log.d("GameFragmentTreeObserver", "BlockSize: " + blockSize);
 
                 // REMOVE THE LISTENER TO PREVENT MULTIPLE CALLS

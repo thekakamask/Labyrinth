@@ -37,6 +37,8 @@ public class GraphicEngineOfLabyrinth extends View {
         for (Block block : physicEngineOfLabyrinth.getBlocks()) {
             paint.setColor(block.getColor()); // DEFINE COLOR OF EACH BLOCKS
             block.draw(canvas, blockSize);
+
+
         }
 
         // DRAW BALL
