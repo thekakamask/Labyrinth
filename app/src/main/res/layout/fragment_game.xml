@@ -32,6 +32,7 @@
     </LinearLayout>
 
     <FrameLayout
+        android:layout_margin="10dp"
         android:id="@+id/gameContainer"
         android:layout_width="match_parent"
         android:layout_height="420dp"

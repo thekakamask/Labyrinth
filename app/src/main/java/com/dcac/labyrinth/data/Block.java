@@ -6,54 +6,33 @@ import android.graphics.Paint;
 
 public class Block {
 
-    private float x; // X POSITION OF THE BLOCK
-    private float y; // Y POSITION OF THE BLOCK
-    private float width; // BLOCK WIDTH
-    private float height; // BLOCK HEIGHT
+    private final int x; // X POSITION IN BLOCKS
+    private final int y; // Y POSITION IN BLOCKS
+    private final int color; // BLOCK COLOR
 
-
-    public Block(float x, float y, float width, float height) {
+    public Block(int x, int y, int color) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.color = color;
     }
 
-    public float getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public int getColor() {
+        return color;
     }
 
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
-    // DRAW BLOCK IN THE CANVAS
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRect(x,y,x+width, y+height, paint);
+    // DRAW BLOCKS
+    public void draw(Canvas canvas, int blockSize) {
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawRect(x * blockSize, y * blockSize, (x + 1) * blockSize, (y + 1) * blockSize, paint);
     }
 
 

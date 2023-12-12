@@ -6,49 +6,46 @@ import android.graphics.Paint;
 
 public class Ball {
 
-    private float x; // X POSITION OF THE BALL
-    private float y; // Y POSITION OF THE BALL
-    private float radius; // RADIUS OF THE BALL
+    private int x; // X POSITION IN BLOCKS
+    private int y; // Y POSITION IN BLOCKS
+    private final int color; // BALL COLOR
 
-    public Ball(float x, float y, float radius) {
-        this.x=x;
-        this.y=y;
-        this.radius=radius;
+    public Ball(int startX, int startY, int color) {
+        this.x = startX;
+        this.y = startY;
+        this.color = color;
     }
 
-    public float getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public float getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(int y) {
         this.y = y;
     }
 
-    public float getRadius() {
-        return radius;
+    public int getColor() {
+        return color;
     }
 
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
-    // METHODE FOR MOOVE THE BALL
-    public void move(float dx, float dy) {
+    public void move(int dx, int dy) {
         x += dx;
         y += dy;
     }
 
-    // DRAW THE BALL IN THE CANVAS
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawCircle(x, y, radius, paint);
+    // DRAW BALL
+    public void draw(Canvas canvas, int blockSize) {
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawCircle(x * blockSize + blockSize / 2f, y * blockSize + blockSize / 2f, blockSize / 2f, paint);
     }
 
 }
