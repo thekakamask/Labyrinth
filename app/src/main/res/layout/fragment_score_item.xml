@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+    <!--    android:background="@drawable/cell_border">-->
+
+
+    <ImageView
+        android:id="@+id/score_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/user_icon" />
+
+    <TextView
+        android:id="@+id/scoreName"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorButtonNormal"
+        android:layout_marginStart="16dp"
+        android:text="@string/user_name"/>
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="30dp"
+        android:layout_height="48dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:textColor="?attr/colorButtonNormal"
+        android:text="@string/user_score"/>
+</LinearLayout>

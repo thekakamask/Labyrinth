@@ -2,6 +2,8 @@
     <string name="app_name">Labyrinth</string>
     <!-- Welcome Fragment -->
     <string name="text_bouton_welcome_fragment">Play the game</string>
+    <string name="google_account">Google account</string>
+    <string name="text_bouton2_welcome_fragment">Score</string>
     <!-- Parameters Activity -->
     <string name="title_parameters_activity">Parameters</string>
     <!-- Parameters Activity Tabs -->
@@ -15,5 +17,10 @@
     <string name="button_down_arrow">Down arrow of button</string>
     <string name="button_left_arrow">Left arrow of button</string>
     <string name="button_right_arrow">Right arrow of button</string>
+    <!-- Score Fragment -->
+    <string name="title_score_fragment">Score</string>
+    <!-- Score Fragment Item -->
+    <string name="user_name">User name</string>
+    <string name="user_score">00</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +20,7 @@ import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
 import com.dcac.labyrinth.ui.game.GameFragment;
 import com.dcac.labyrinth.ui.parameters.ParametersActivity;
+import com.dcac.labyrinth.ui.score.ScoreFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,11 +66,15 @@ public class WelcomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
+        int googleColor = ContextCompat.getColor(getContext(), R.color.google_blue);
 
         binding.buttonWelcome.setEnabled(true);
         binding.buttonWelcome.setBackgroundColor(backgroundColor);
+        binding.buttonScore.setEnabled(true);
+        binding.buttonScore.setBackgroundColor(backgroundColor);
         binding.imageParameterButton.setEnabled(true);
-
+        binding.buttonGoogle.setBackgroundColor(googleColor);
+        binding.buttonGoogle.setEnabled(true);
         binding.buttonWelcome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,6 +101,18 @@ public class WelcomeFragment extends Fragment {
                 fragmentTransaction.commit();
 
 
+            }
+        });
+
+        binding.buttonScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager= getParentFragmentManager();
+                FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+                ScoreFragment scoreFragment= ScoreFragment.newInstance();
+                fragmentTransaction.add(R.id.fragment_container, scoreFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
