@@ -118,6 +118,9 @@ public class PhysicEngineOfLabyrinth {
             } else {
                 // BALL FALL IN A HOLE
                 gameLost = true; // GAME LOST
+                ball.setX(startBlock.getX());
+                ball.setY(startBlock.getY());
+                graphicEngineOfLabyrinth.invalidate();
             }
         } else {
             // MOVE OUT OF LIMIT , DO NOTHING
@@ -176,6 +179,40 @@ public class PhysicEngineOfLabyrinth {
             }
         }
         return false; // BALL DONT GET TO THE FINISH ZONE
+    }
+
+    public void loadNewLabyrinth(int[][] newLayout) {
+        // Initialiser les nouveaux blocks en fonction du nouveau layout
+        blocks.clear();
+        for (int y = 0; y < newLayout.length; y++) {
+            for (int x = 0; x < newLayout[y].length; x++) {
+                int blockColor = getColorForLayoutValue(newLayout[y][x]);
+                if (newLayout[y][x] == 2) {
+                    startBlock = new Block(x, y, blockColor);
+                    ball.setX(x);
+                    ball.setY(y);
+                } else if (newLayout[y][x] == 3) {
+                    endBlock = new Block(x, y, blockColor);
+                } else {
+                    blocks.add(new Block(x, y, blockColor));
+                }
+            }
+        }
+
+        resetGame();
+
+        graphicEngineOfLabyrinth.invalidate();
+    }
+
+
+    private int getColorForLayoutValue(int value) {
+        switch (value) {
+            case 0: return Color.CYAN; // GOOD PATH COLOR
+            case 1: return Color.BLACK; // HOLE COLOR
+            case 2: return Color.WHITE; // START BLOCK COLOR
+            case 3: return Color.RED;   // FINISH BLOCK COLOR
+            default: return Color.TRANSPARENT;
+        }
     }
 
 }

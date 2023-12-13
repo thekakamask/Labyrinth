@@ -32,12 +32,14 @@
     </LinearLayout>
 
     <FrameLayout
-        android:layout_margin="10dp"
         android:id="@+id/gameContainer"
         android:layout_width="match_parent"
         android:layout_height="420dp"
-        android:layout_below="@id/header_parameters_activity">
-    </FrameLayout>
+        android:layout_below="@id/header_parameters_activity"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"></FrameLayout>
 
     <!-- Joystick Container -->
     <RelativeLayout
@@ -45,9 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/gameContainer"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:gravity="center_horizontal">
 
         <!-- Top Button -->
         <ImageButton
