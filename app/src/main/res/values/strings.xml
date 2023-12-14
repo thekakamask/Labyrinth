@@ -4,6 +4,15 @@
     <string name="text_bouton_welcome_fragment">Play the game</string>
     <string name="google_account">Google account</string>
     <string name="text_bouton2_welcome_fragment">Score</string>
+    <string name="not_connected">Not connected</string>
+    <string name="button_parameters">Button parameters</string>
+    <string name="disconnect">Log off</string>
+
+    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
+    <string name="connection_succeed">Authentification réussie !</string>
+    <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
+    <string name="error_no_internet">Aucune connexion internet !</string>
+
     <!-- Parameters Activity -->
     <string name="title_parameters_activity">Parameters</string>
     <!-- Parameters Activity Tabs -->

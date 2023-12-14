@@ -1,9 +1,12 @@
 package com.dcac.labyrinth.ui.welcome;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -21,6 +24,15 @@ import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
 import com.dcac.labyrinth.ui.game.GameFragment;
 import com.dcac.labyrinth.ui.parameters.ParametersActivity;
 import com.dcac.labyrinth.ui.score.ScoreFragment;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +42,9 @@ import com.dcac.labyrinth.ui.score.ScoreFragment;
 public class WelcomeFragment extends Fragment {
 
     private FragmentWelcomeBinding binding;
+    private static final int RC_SIGN_IN = 123;
+
+    private ActivityResultLauncher<Intent> signInLauncher;
 
 
 
@@ -41,6 +56,37 @@ public class WelcomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        signInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // TREATMENT AFTER A SUCCESSFUL CONNECTION
+                        //userManager.createUser();
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user != null) {
+                            // Mettre à jour le texte du bouton et du TextView
+                            binding.buttonLogin.setText(R.string.disconnect);
+                            binding.idAccount.setText(user.getEmail());
+
+                        showSnackBar(getString(R.string.connection_succeed));
+                        }
+                    } else {
+                        // Traitement des erreurs
+                        IdpResponse response = IdpResponse.fromResultIntent(result.getData());
+                        if (response == null) {
+                            showSnackBar(getString(R.string.error_authentication_canceled));
+                        } else if (response.getError() != null) {
+                            if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                                showSnackBar(getString(R.string.error_no_internet));
+                            } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                                showSnackBar(getString(R.string.error_unknown_error));
+                            }
+                        }
+                    }
+                }
+        );
 
     }
 
@@ -73,8 +119,8 @@ public class WelcomeFragment extends Fragment {
         binding.buttonScore.setEnabled(true);
         binding.buttonScore.setBackgroundColor(backgroundColor);
         binding.imageParameterButton.setEnabled(true);
-        binding.buttonGoogle.setBackgroundColor(googleColor);
-        binding.buttonGoogle.setEnabled(true);
+        binding.buttonLogin.setBackgroundColor(googleColor);
+        binding.buttonLogin.setEnabled(true);
         binding.buttonWelcome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,6 +161,13 @@ public class WelcomeFragment extends Fragment {
                 fragmentTransaction.commit();
             }
         });
+
+        binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSignInActivity();
+            }
+        });
     }
 
     public static int getThemeColor(Context context, int attributeColor) {
@@ -122,4 +175,27 @@ public class WelcomeFragment extends Fragment {
         context.getTheme().resolveAttribute(attributeColor, typedValue, true);
         return typedValue.data;
     }
+
+    private void startSignInActivity() {
+
+        //CHOOSE AUTH PROVIDERS
+        List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build());
+
+        // LAUNCH CONNECTION ACTIVITY
+        Intent signInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setTheme(R.style.LoginTheme)
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false,true)
+                .setLogo(R.drawable.game_icon)
+                .build();
+
+        signInLauncher.launch(signInIntent);
+    }
+
+
+    private void showSnackBar(String message) {
+        Snackbar.make(binding.welcomeFragmentMainLayout, message, Snackbar.LENGTH_SHORT).show();
+    }
+
 }

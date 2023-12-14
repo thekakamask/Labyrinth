@@ -23,4 +23,14 @@
     <color name="dark_black">#181818</color>
     <color name="dark_grey">#3d3d3d</color>
     <color name="darker_grey">#212121</color>
+
+    <!-- LOGIN THEME > -->
+    <color name="colorPrimary">#039BE5</color>
+    <color name="colorPrimaryDark">#0288D1</color>
+    <color name="colorAccent">#FFA000</color>
+    <color name="colorError">#FF5252</color>
+
+    <color name="colorGreen">#6BB18C</color>
+    <color name="colorSandLight">#ECDAAF</color>
+    <color name="colorSand">#EBCB94</color>
 </resources>

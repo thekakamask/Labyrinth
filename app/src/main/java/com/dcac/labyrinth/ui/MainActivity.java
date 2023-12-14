@@ -8,18 +8,18 @@ import android.os.Bundle;
 import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
-    private ActivityMainBinding binding;
     private String lastAppliedTheme;
 
+    protected ActivityMainBinding getViewBinding(){
+        return ActivityMainBinding.inflate(getLayoutInflater());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         applySelectedTheme();
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
     }
 
     @Override

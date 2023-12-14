@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimaryDark"
+    android:id="@+id/welcome_fragment_main_layout"
     tools:context=".ui.welcome.WelcomeFragment">
 
     <ImageButton
@@ -15,18 +16,31 @@
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:src="@drawable/parameter_icon"
+        android:contentDescription="@string/button_parameters"
         android:background="@null"/>
 
-    <ImageButton
-        android:id="@+id/image_google_button"
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/id_account"
+        android:src="@drawable/google_icon_button" />
+
+    <TextView
+        android:id="@+id/id_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
+        android:text="@string/not_connected"
+        android:textColor="?attr/colorButtonNormal"
         android:layout_marginEnd="5dp"
-        android:src="@drawable/google_icon"
-        android:background="@null"/>
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/files_explorer_image"
@@ -65,7 +79,7 @@
         android:textStyle="bold"/>
 
     <Button
-        android:id="@+id/button_google"
+        android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_score"

@@ -8,12 +8,14 @@ import android.widget.ExpandableListView;
 
 import com.dcac.labyrinth.data.ParametersItem;
 import com.dcac.labyrinth.R;
+import com.dcac.labyrinth.databinding.ActivityParametersBinding;
+import com.dcac.labyrinth.ui.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ParametersActivity extends AppCompatActivity implements ParametersActivityAdapter.OnThemeChangeListener {
+public class ParametersActivity extends BaseActivity<ActivityParametersBinding> implements ParametersActivityAdapter.OnThemeChangeListener {
 
     private ExpandableListView expandableListView;
 
@@ -22,13 +24,16 @@ public class ParametersActivity extends AppCompatActivity implements ParametersA
 
     private HashMap<String, List<ParametersItem>> listTabOngletsData;
 
+    private ActivityParametersBinding binding;
+
+    protected ActivityParametersBinding getViewBinding(){
+        return ActivityParametersBinding.inflate(getLayoutInflater());
+    }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
         applySelectedTheme();
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_parameters);
 
         prepareListData(); // Préparez vos données ici
 
