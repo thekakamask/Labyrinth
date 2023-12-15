@@ -20,17 +20,8 @@
         android:background="@null"/>
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_toStartOf="@+id/id_account"
-        android:src="@drawable/google_icon_button" />
-
-    <TextView
-        android:id="@+id/id_account"
+    <Button
+        android:id="@+id/button_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -40,7 +31,9 @@
         android:textColor="?attr/colorButtonNormal"
         android:layout_marginEnd="5dp"
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:drawableLeft="@drawable/account_icon_button"/>
+
 
     <ImageView
         android:id="@+id/files_explorer_image"
@@ -52,7 +45,7 @@
         android:src="@drawable/labyrinth_logo" />
 
     <Button
-        android:id="@+id/button_welcome"
+        android:id="@+id/button_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/files_explorer_image"
@@ -69,7 +62,7 @@
         android:id="@+id/button_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/button_welcome"
+        android:layout_below="@id/button_game"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:text="@string/text_bouton2_welcome_fragment"
@@ -85,9 +78,9 @@
         android:layout_below="@id/button_score"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:text="@string/google_account"
+        android:text="@string/account"
         android:textColor="?attr/colorButtonNormal"
-        android:drawableLeft="@drawable/google_icon_button"
+        android:drawableLeft="@drawable/account_icon_button"
         android:textSize="20sp"
         android:textStyle="bold"/>
 

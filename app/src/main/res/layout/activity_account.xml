@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryDark">
+
+
+    <LinearLayout
+        android:id="@+id/header_parameters_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="?attr/colorPrimary">
+
+        <ImageView
+            android:id="@+id/header_icon_parameters_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/account_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="30sp"
+            android:text="@string/title_account_activity"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+</RelativeLayout>
+

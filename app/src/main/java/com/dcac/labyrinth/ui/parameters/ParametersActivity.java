@@ -24,7 +24,6 @@ public class ParametersActivity extends BaseActivity<ActivityParametersBinding> 
 
     private HashMap<String, List<ParametersItem>> listTabOngletsData;
 
-    private ActivityParametersBinding binding;
 
     protected ActivityParametersBinding getViewBinding(){
         return ActivityParametersBinding.inflate(getLayoutInflater());

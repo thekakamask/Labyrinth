@@ -1,6 +1,7 @@
 package com.dcac.labyrinth.ui.welcome;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,9 +22,11 @@ import android.view.ViewGroup;
 
 import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
+import com.dcac.labyrinth.ui.account.AccountActivity;
 import com.dcac.labyrinth.ui.game.GameFragment;
 import com.dcac.labyrinth.ui.parameters.ParametersActivity;
 import com.dcac.labyrinth.ui.score.ScoreFragment;
+import com.facebook.FacebookSdk;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -57,6 +60,7 @@ public class WelcomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         signInLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -68,7 +72,8 @@ public class WelcomeFragment extends Fragment {
                         if (user != null) {
                             // Mettre à jour le texte du bouton et du TextView
                             binding.buttonLogin.setText(R.string.disconnect);
-                            binding.idAccount.setText(user.getEmail());
+                            binding.buttonAccount.setEnabled(true);
+                            binding.buttonAccount.setText(user.getEmail());
 
                         showSnackBar(getString(R.string.connection_succeed));
                         }
@@ -112,19 +117,22 @@ public class WelcomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
-        int googleColor = ContextCompat.getColor(getContext(), R.color.google_blue);
-
-        binding.buttonWelcome.setEnabled(true);
-        binding.buttonWelcome.setBackgroundColor(backgroundColor);
+        int connectionColor = ContextCompat.getColor(getContext(), R.color.google_blue);
+        binding.buttonGame.setEnabled(true);
+        binding.buttonGame.setBackgroundColor(backgroundColor);
         binding.buttonScore.setEnabled(true);
         binding.buttonScore.setBackgroundColor(backgroundColor);
         binding.imageParameterButton.setEnabled(true);
-        binding.buttonLogin.setBackgroundColor(googleColor);
+        binding.buttonLogin.setBackgroundColor(connectionColor);
         binding.buttonLogin.setEnabled(true);
-        binding.buttonWelcome.setOnClickListener(new View.OnClickListener() {
+        binding.buttonAccount.setEnabled(false);
+        binding.buttonAccount.setBackgroundColor(0);
+
+        binding.buttonAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // CLICK SUR LE BOUTON POUR LANCER LE JEU.
+                Intent intent = new Intent(getActivity(), AccountActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -136,7 +144,7 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        binding.buttonWelcome.setOnClickListener(new View.OnClickListener() {
+        binding.buttonGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager= getParentFragmentManager();
@@ -162,12 +170,30 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startSignInActivity();
-            }
+        binding.buttonLogin.setOnClickListener(v -> {
+            String[] options = {"E-mail", "Google", "Facebook"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(getString(R.string.connection_method))
+                    .setItems(options, (dialog, which) -> {
+                        switch (which) {
+                            case 0: // E-MAIL
+                                startMailSignInActivity();
+                                break;
+                            case 1: // GOOGLE
+
+                                startGoogleSignInActivity();
+                                break;
+                            case 2: // FACEBOOK
+
+                                startFacebookSignInActivity();
+                                break;
+                        }
+                    });
+            builder.show();
+
         });
+
+
     }
 
     public static int getThemeColor(Context context, int attributeColor) {
@@ -176,21 +202,49 @@ public class WelcomeFragment extends Fragment {
         return typedValue.data;
     }
 
-    private void startSignInActivity() {
+    private void startMailSignInActivity() {
 
         //CHOOSE AUTH PROVIDERS
         List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build());
 
         // LAUNCH CONNECTION ACTIVITY
-        Intent signInIntent = AuthUI.getInstance()
+        Intent mailSignInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setTheme(R.style.LoginTheme)
                 .setAvailableProviders(providers)
                 .setIsSmartLockEnabled(false,true)
-                .setLogo(R.drawable.game_icon)
+                .setLogo(R.drawable.account_icon_button)
                 .build();
 
-        signInLauncher.launch(signInIntent);
+        signInLauncher.launch(mailSignInIntent);
+    }
+
+    private void startGoogleSignInActivity() {
+        List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build());
+
+        Intent googleSignInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setTheme(R.style.LoginTheme)
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false,true)
+                .setLogo(R.drawable.account_icon_button)
+                .build();
+
+        signInLauncher.launch(googleSignInIntent);
+    }
+
+    private void startFacebookSignInActivity(){
+        List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build());
+
+        Intent facebookSignInIntent = AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setTheme(R.style.LoginTheme)
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false,true)
+                .setLogo(R.drawable.account_icon_button)
+                .build();
+
+        signInLauncher.launch(facebookSignInIntent);
     }
 
 
