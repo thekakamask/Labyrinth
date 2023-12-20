@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.data;
+package com.dcac.labyrinth.data.score;
 
 public class Score {
 

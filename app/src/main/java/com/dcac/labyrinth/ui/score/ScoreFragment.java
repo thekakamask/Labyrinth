@@ -15,8 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.Score;
-import com.dcac.labyrinth.databinding.FragmentGameBinding;
+import com.dcac.labyrinth.data.score.Score;
 import com.dcac.labyrinth.databinding.FragmentScoreBinding;
 
 import java.util.ArrayList;

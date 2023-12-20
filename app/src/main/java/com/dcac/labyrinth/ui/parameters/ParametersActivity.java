@@ -1,12 +1,10 @@
 package com.dcac.labyrinth.ui.parameters;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ExpandableListView;
 
-import com.dcac.labyrinth.data.ParametersItem;
+import com.dcac.labyrinth.data.parameters.ParametersItem;
 import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.ActivityParametersBinding;
 import com.dcac.labyrinth.ui.BaseActivity;

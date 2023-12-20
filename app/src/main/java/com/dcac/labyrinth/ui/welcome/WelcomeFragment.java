@@ -21,12 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dcac.labyrinth.R;
+import com.dcac.labyrinth.data.user.UserManager;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
 import com.dcac.labyrinth.ui.account.AccountActivity;
 import com.dcac.labyrinth.ui.game.GameFragment;
 import com.dcac.labyrinth.ui.parameters.ParametersActivity;
 import com.dcac.labyrinth.ui.score.ScoreFragment;
-import com.facebook.FacebookSdk;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -44,8 +44,11 @@ import java.util.List;
  */
 public class WelcomeFragment extends Fragment {
 
+    private ActivityResultLauncher<Intent> accountActivityLauncher;
     private FragmentWelcomeBinding binding;
-    private static final int RC_SIGN_IN = 123;
+    //private static final int RC_SIGN_IN = 123;
+
+    private UserManager userManager = UserManager.getInstance();
 
     private ActivityResultLauncher<Intent> signInLauncher;
 
@@ -70,15 +73,19 @@ public class WelcomeFragment extends Fragment {
 
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         if (user != null) {
-                            // Mettre à jour le texte du bouton et du TextView
+                            // UPDATE TEXTBUTTON AND TEXTVIEW
                             binding.buttonLogin.setText(R.string.disconnect);
                             binding.buttonAccount.setEnabled(true);
                             binding.buttonAccount.setText(user.getEmail());
+                            binding.buttonLogin.setEnabled(false);
+                            int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
+                            binding.buttonAccount.setBackgroundColor(backgroundColor);
+                           // binding.buttonAccount.setBackgroundColor(16767117);
 
                         showSnackBar(getString(R.string.connection_succeed));
                         }
                     } else {
-                        // Traitement des erreurs
+                        // ERROR TRAITMENT
                         IdpResponse response = IdpResponse.fromResultIntent(result.getData());
                         if (response == null) {
                             showSnackBar(getString(R.string.error_authentication_canceled));
@@ -90,6 +97,21 @@ public class WelcomeFragment extends Fragment {
                             }
                         }
                     }
+                }
+        );
+
+        accountActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        binding.buttonLogin.setText(R.string.log_in);
+                        binding.buttonAccount.setEnabled(false);
+                        binding.buttonAccount.setText(R.string.not_connected);
+                        binding.buttonLogin.setEnabled(true);
+                        binding.buttonAccount.setBackgroundColor(0);
+                        //binding.buttonAccount.setBackgroundColor();
+                    }
+
                 }
         );
 
@@ -127,12 +149,17 @@ public class WelcomeFragment extends Fragment {
         binding.buttonLogin.setEnabled(true);
         binding.buttonAccount.setEnabled(false);
         binding.buttonAccount.setBackgroundColor(0);
+        //binding.buttonLoginFacebook.setEnabled(true);
+
+        updateLoginStatus();
+
+
 
         binding.buttonAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AccountActivity.class);
-                startActivity(intent);
+                accountActivityLauncher.launch(intent);
             }
         });
 
@@ -171,7 +198,7 @@ public class WelcomeFragment extends Fragment {
         });
 
         binding.buttonLogin.setOnClickListener(v -> {
-            String[] options = {"E-mail", "Google", "Facebook"};
+            String[] options = {"E-mail", "Google"};
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(getString(R.string.connection_method))
                     .setItems(options, (dialog, which) -> {
@@ -183,16 +210,21 @@ public class WelcomeFragment extends Fragment {
 
                                 startGoogleSignInActivity();
                                 break;
-                            case 2: // FACEBOOK
-
+                            /*case 2: // FACEBOOK
                                 startFacebookSignInActivity();
-                                break;
+                                break;*/
                         }
                     });
             builder.show();
 
         });
 
+        /*binding.buttonLoginFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFacebookSignInActivity();
+            }
+        });*/
 
     }
 
@@ -233,7 +265,7 @@ public class WelcomeFragment extends Fragment {
         signInLauncher.launch(googleSignInIntent);
     }
 
-    private void startFacebookSignInActivity(){
+    /*private void startFacebookSignInActivity(){
         List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build());
 
         Intent facebookSignInIntent = AuthUI.getInstance()
@@ -245,8 +277,32 @@ public class WelcomeFragment extends Fragment {
                 .build();
 
         signInLauncher.launch(facebookSignInIntent);
-    }
+    }*/
 
+    private void updateLoginStatus() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // USER CONNECTED
+            binding.buttonLogin.setText(R.string.disconnect);
+            binding.buttonAccount.setEnabled(true);
+            binding.buttonAccount.setText(user.getEmail());
+            binding.buttonLogin.setEnabled(false);
+            int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
+            binding.buttonAccount.setBackgroundColor(backgroundColor);
+
+            /*TypedValue value = new TypedValue();
+            getContext().getTheme().resolveAttribute(R.attr.colorPrimary, value, true);
+            binding.buttonAccount.setBackgroundColor(value.data);*/
+        } else {
+            // USER NOT CONNECTED
+            binding.buttonLogin.setText(R.string.log_in);
+            binding.buttonAccount.setEnabled(false);
+            binding.buttonAccount.setText(R.string.not_connected);
+            binding.buttonLogin.setEnabled(true);
+            binding.buttonAccount.setBackgroundColor(0);
+
+        }
+    }
 
     private void showSnackBar(String message) {
         Snackbar.make(binding.welcomeFragmentMainLayout, message, Snackbar.LENGTH_SHORT).show();

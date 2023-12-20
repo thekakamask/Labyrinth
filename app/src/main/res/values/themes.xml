@@ -20,6 +20,8 @@
 
         <item name="application_logo">@drawable/labyrinth_logo</item>
 
+        <item name="profile_logo">@drawable/profile_icon_150</item>
+
     </style>
 
     <!-- LightTheme -->
@@ -37,6 +39,9 @@
         <item name="controlBackground">@color/dark_white</item>
 
         <item name="application_logo">@drawable/labyrinth_logo_black</item>
+
+        <item name="profile_logo">@drawable/profile_icon_150</item>
+
     </style>
 
     <!-- DarkTheme -->
@@ -52,6 +57,9 @@
         <item name="controlBackground">@color/grey</item>
 
         <item name="application_logo">@drawable/labyrinth_logo</item>
+
+        <item name="profile_logo">@drawable/profile_icon_150_white</item>
+
     </style>
 
     <style name="LoginTheme" parent="Theme.Material3.DayNight.NoActionBar">

@@ -15,3 +15,4 @@
 local.properties
 /app/google-services
 /app/src/main/res/values/facebook_id.xml
+/app/debug.keystore

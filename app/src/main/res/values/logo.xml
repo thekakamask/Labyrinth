@@ -2,5 +2,6 @@
 <resources>
 
     <attr name="application_logo" format="reference"/>
+    <attr name="profile_logo" format="reference"/>
 
 </resources>

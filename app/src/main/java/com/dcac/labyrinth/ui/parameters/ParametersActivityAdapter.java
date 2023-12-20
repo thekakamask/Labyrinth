@@ -9,7 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.dcac.labyrinth.data.ParametersItem;
+import com.dcac.labyrinth.data.parameters.ParametersItem;
 import com.dcac.labyrinth.R;
 
 import java.util.HashMap;

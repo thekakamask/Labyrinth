@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.Score;
+import com.dcac.labyrinth.data.score.Score;
 
 import java.util.List;
 

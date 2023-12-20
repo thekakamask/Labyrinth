@@ -2,11 +2,12 @@
     <string name="app_name">Labyrinth</string>
     <!-- Welcome Fragment -->
     <string name="text_bouton_welcome_fragment">Play the game</string>
-    <string name="account">Log on</string>
+    <string name="log_in">Log in</string>
+    <string name="log_in_facebook">Log in with facebook</string>
     <string name="text_bouton2_welcome_fragment">Score</string>
     <string name="not_connected">Not connected</string>
     <string name="button_parameters">Button parameters</string>
-    <string name="disconnect">Log off</string>
+    <string name="disconnect">Currently connected</string>
     <string name="connection_method">Choose a connection method</string>
 
     <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
@@ -32,7 +33,22 @@
     <!-- Score Fragment -->
     <string name="title_score_fragment">Score</string>
     <!-- Score Fragment Item -->
-    <string name="user_name">User name</string>
+    <string name="user_name">Username</string>
     <string name="user_score">00</string>
+
+    <!-- Account Fragment Item -->
+    <string name="username">Username</string>
+    <string name="email_address_label">Your email :</string>
+    <string name="update_username">Update your username</string>
+    <string name="deconnection">Log off</string>
+    <string name="delete_account">delete your account</string>
+    <string name="score_label">Your score :</string>
+    <string name="account_score">User score</string>
+    <string name="account_email">User email</string>
+    <string name="info_no_email_found">No email found\n</string>
+    <string name="info_no_username_found">No username found</string>
+    <string name="popup_message_confirmation_delete_account">Do you confirm deleting your account ?</string>
+    <string name="popup_message_choice_yes">Yes</string>
+    <string name="popup_message_choice_no">No</string>
 
 </resources>

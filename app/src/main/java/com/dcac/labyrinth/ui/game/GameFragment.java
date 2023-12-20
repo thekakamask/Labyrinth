@@ -16,10 +16,10 @@ import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 
-import com.dcac.labyrinth.data.Ball;
-import com.dcac.labyrinth.data.Block;
-import com.dcac.labyrinth.data.GraphicEngineOfLabyrinth;
-import com.dcac.labyrinth.data.PhysicEngineOfLabyrinth;
+import com.dcac.labyrinth.data.game.Ball;
+import com.dcac.labyrinth.data.game.Block;
+import com.dcac.labyrinth.data.game.GraphicEngineOfLabyrinth;
+import com.dcac.labyrinth.data.game.PhysicEngineOfLabyrinth;
 import com.dcac.labyrinth.databinding.FragmentGameBinding;
 
 import java.util.ArrayList;
