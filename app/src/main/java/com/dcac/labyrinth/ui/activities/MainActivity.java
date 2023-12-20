@@ -1,12 +1,9 @@
-package com.dcac.labyrinth.ui;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.dcac.labyrinth.ui.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.user.UserManager;
 import com.dcac.labyrinth.databinding.ActivityMainBinding;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> {

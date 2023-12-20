@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.ui.game;
+package com.dcac.labyrinth.ui.activities.fragments;
 
 
 import android.graphics.Color;
@@ -16,10 +16,10 @@ import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 
-import com.dcac.labyrinth.data.game.Ball;
-import com.dcac.labyrinth.data.game.Block;
-import com.dcac.labyrinth.data.game.GraphicEngineOfLabyrinth;
-import com.dcac.labyrinth.data.game.PhysicEngineOfLabyrinth;
+import com.dcac.labyrinth.data.models.Ball;
+import com.dcac.labyrinth.data.models.Block;
+import com.dcac.labyrinth.data.utils.GraphicEngineOfLabyrinth;
+import com.dcac.labyrinth.data.utils.PhysicEngineOfLabyrinth;
 import com.dcac.labyrinth.databinding.FragmentGameBinding;
 
 import java.util.ArrayList;
@@ -61,11 +61,11 @@ public class GameFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         binding.buttonTop.setEnabled(true);
         binding.buttonBottom.setEnabled(true);
         binding.buttonLeft.setEnabled(true);
         binding.buttonRight.setEnabled(true);
-
 
         final Runnable checkGameState = new Runnable() {
             @Override

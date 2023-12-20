@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.ui.parameters;
+package com.dcac.labyrinth.ui.views;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,7 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.dcac.labyrinth.data.parameters.ParametersItem;
+import com.dcac.labyrinth.data.models.ParametersItem;
 import com.dcac.labyrinth.R;
 
 import java.util.HashMap;

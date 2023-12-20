@@ -36,7 +36,7 @@
     <string name="user_name">Username</string>
     <string name="user_score">00</string>
 
-    <!-- Account Fragment Item -->
+    <!-- Account Fragment -->
     <string name="username">Username</string>
     <string name="email_address_label">Your email :</string>
     <string name="update_username">Update your username</string>
@@ -50,5 +50,9 @@
     <string name="popup_message_confirmation_delete_account">Do you confirm deleting your account ?</string>
     <string name="popup_message_choice_yes">Yes</string>
     <string name="popup_message_choice_no">No</string>
+
+    <!-- UserRepository -->
+    <string name="unknown_error">Unknown error</string>
+
 
 </resources>

@@ -1,9 +1,12 @@
-package com.dcac.labyrinth.data.game;
+package com.dcac.labyrinth.data.utils;
 
 
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
+
+import com.dcac.labyrinth.data.models.Ball;
+import com.dcac.labyrinth.data.models.Block;
 
 import java.util.List;
 
@@ -11,6 +14,7 @@ public class PhysicEngineOfLabyrinth {
 
     private Ball ball;
     private List<Block> blocks;
+
 
     private Block startBlock; // START BLOCK
 
@@ -31,7 +35,8 @@ public class PhysicEngineOfLabyrinth {
         this.endBlock = endBlock;
         this.width = width;
         this.height = height;
-        this.graphicEngineOfLabyrinth = new GraphicEngineOfLabyrinth(context, this, blockSize);}
+        this.graphicEngineOfLabyrinth = new GraphicEngineOfLabyrinth(context, this, blockSize);
+    }
 
     public Ball getBall() {
         return ball;
@@ -134,6 +139,11 @@ public class PhysicEngineOfLabyrinth {
 
     }
 
+    private boolean isHole(int x, int y) {
+        // CHECK IS NEW POSITION IS A HOLE
+        return !isSafe(x,y);
+    }
+
 
     private boolean isPath(int x, int y) {
         // CHECK IF COORDINATES DONT MATCH WITH A HOLE
@@ -214,6 +224,8 @@ public class PhysicEngineOfLabyrinth {
             default: return Color.TRANSPARENT;
         }
     }
+
+
 
 }
 

@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.data.parameters;
+package com.dcac.labyrinth.data.models;
 
 public class ParametersItem {
 

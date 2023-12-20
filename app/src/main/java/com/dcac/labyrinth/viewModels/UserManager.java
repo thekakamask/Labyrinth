@@ -1,15 +1,17 @@
-package com.dcac.labyrinth.data.user;
+package com.dcac.labyrinth.viewModels;
 
 import android.content.Context;
 
-import com.firebase.ui.auth.AuthUI;
+import com.dcac.labyrinth.data.repository.UserRepository;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class UserManager {
 
     private static volatile UserManager instance;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private UserManager() {
         userRepository = UserRepository.getInstance();
@@ -43,4 +45,31 @@ public class UserManager {
     public Task<Void> deleteUser(Context context) {
         return userRepository.deleteUser(context);
     }
+
+    public void createUser(String uid) {
+        userRepository.createUserInFirestore(uid);
+    }
+
+    public Task<DocumentSnapshot> getUserData(String uid) {
+        userRepository.getUserData(uid);
+        return userRepository.getUsersCollection().document(uid).get();
+    }
+
+    public CollectionReference getUsersCollection() {
+        return userRepository.getUsersCollection();
+    }
+
+    public void updateScore(String uid, int score) {
+        userRepository.updateScore(uid, score);
+    }
+
+    public void updateUserName(String uid, String userName) {
+        userRepository.updateUserName(uid, userName);
+    }
+
+
+
+
+
+
 }

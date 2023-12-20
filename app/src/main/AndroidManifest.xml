@@ -20,13 +20,13 @@
 
 
         <activity
-            android:name=".ui.account.AccountActivity"
+            android:name=".ui.activities.AccountActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.parameters.ParametersActivity"
+            android:name=".ui.activities.ParametersActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

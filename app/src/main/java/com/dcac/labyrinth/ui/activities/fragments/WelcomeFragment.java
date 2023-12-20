@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.ui.welcome;
+package com.dcac.labyrinth.ui.activities.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,12 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.user.UserManager;
+import com.dcac.labyrinth.viewModels.UserManager;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
-import com.dcac.labyrinth.ui.account.AccountActivity;
-import com.dcac.labyrinth.ui.game.GameFragment;
-import com.dcac.labyrinth.ui.parameters.ParametersActivity;
-import com.dcac.labyrinth.ui.score.ScoreFragment;
+import com.dcac.labyrinth.ui.activities.AccountActivity;
+import com.dcac.labyrinth.ui.activities.ParametersActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -65,6 +63,7 @@ public class WelcomeFragment extends Fragment {
 
 
         signInLauncher = registerForActivityResult(
+                //regarder plus precisement son fontionnement
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {

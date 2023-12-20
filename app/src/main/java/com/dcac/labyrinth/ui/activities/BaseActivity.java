@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.ui;
+package com.dcac.labyrinth.ui.activities;
 
 import android.os.Bundle;
 import android.view.View;

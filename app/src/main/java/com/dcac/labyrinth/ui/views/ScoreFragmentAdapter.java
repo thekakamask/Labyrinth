@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.ui.score;
+package com.dcac.labyrinth.ui.views;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.score.Score;
+import com.dcac.labyrinth.data.models.Score;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ScoreFragmentAdapter extends RecyclerView.Adapter<ScoreFragmentAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Score score = mScores.get(position);
-        holder.scoreNameView.setText(score.getName());
+        holder.scoreNameView.setText(score.getUsername());
         holder.scoreView.setText(String.valueOf(score.getScore()));
     }
 

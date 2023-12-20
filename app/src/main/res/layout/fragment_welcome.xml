@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimaryDark"
     android:id="@+id/welcome_fragment_main_layout"
-    tools:context=".ui.welcome.WelcomeFragment">
+    tools:context=".ui.activities.fragments.WelcomeFragment">
 
     <ImageButton
         android:id="@+id/image_parameter_button"

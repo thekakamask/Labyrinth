@@ -32,7 +32,7 @@
     </LinearLayout>
 
     <FrameLayout
-        android:id="@+id/gameContainer"
+        android:id="@+id/game_container"
         android:layout_width="match_parent"
         android:layout_height="420dp"
         android:layout_below="@id/header_parameters_activity"
@@ -41,12 +41,44 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"></FrameLayout>
 
+
+    <LinearLayout
+        android:layout_below="@+id/game_container"
+        android:id="@+id/score_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/score_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/score_label"
+            android:gravity="start"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/user_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="20sp"
+            android:gravity="start"
+            android:textStyle="bold"
+            android:layout_marginEnd="30dp"
+            android:text="@string/user_score"/>
+
+    </LinearLayout>
     <!-- Joystick Container -->
     <RelativeLayout
         android:id="@+id/gameJoystick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gameContainer"
+        android:layout_below="@id/score_container"
         android:gravity="center_horizontal">
 
         <!-- Top Button -->
@@ -55,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/button_top_arrow"
-            android:src="@drawable/button_arrow_top"
+            android:src="@drawable/button_arrow_top_80"
             android:layout_marginBottom="5dp"
             android:layout_centerHorizontal="true"
             android:background="?android:attr/selectableItemBackground"/>
@@ -65,7 +97,7 @@
             android:id="@+id/buttonLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_arrow_left"
+            android:src="@drawable/button_arrow_left_80"
             android:layout_marginTop="55dp"
             android:contentDescription="@string/button_left_arrow"
             android:layout_toLeftOf="@id/buttonTop"
@@ -76,7 +108,7 @@
             android:id="@+id/buttonRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_arrow_right"
+            android:src="@drawable/button_arrow_right_80"
             android:layout_marginTop="55dp"
             android:contentDescription="@string/button_right_arrow"
             android:layout_toRightOf="@id/buttonTop"
@@ -87,7 +119,7 @@
             android:id="@+id/buttonBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_arrow_down"
+            android:src="@drawable/button_arrow_down_80"
             android:layout_below="@id/buttonTop"
             android:layout_marginTop="5dp"
             android:contentDescription="@string/button_down_arrow"

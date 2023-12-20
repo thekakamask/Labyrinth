@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.ui.score;
+package com.dcac.labyrinth.ui.activities.fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,8 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.score.Score;
+import com.dcac.labyrinth.data.models.Score;
 import com.dcac.labyrinth.databinding.FragmentScoreBinding;
+import com.dcac.labyrinth.ui.views.ScoreFragmentAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.data.game;
+package com.dcac.labyrinth.data.models;
 
 
 import android.graphics.Canvas;

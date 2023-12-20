@@ -1,10 +1,9 @@
-package com.dcac.labyrinth.ui.account;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.dcac.labyrinth.ui.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,16 +13,16 @@ import android.text.TextWatcher;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.data.user.UserManager;
+import com.dcac.labyrinth.viewModels.UserManager;
 import com.dcac.labyrinth.databinding.ActivityAccountBinding;
-import com.dcac.labyrinth.databinding.ActivityParametersBinding;
-import com.dcac.labyrinth.ui.BaseActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
 
     // RAJOUTER LES THEMES
     private UserManager userManager = UserManager.getInstance();
+
+    private String lastAppliedTheme;
 
     protected ActivityAccountBinding getViewBinding(){
         return ActivityAccountBinding.inflate(getLayoutInflater());
@@ -32,6 +31,7 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        applySelectedTheme();
         setupListeners();
         updateUIWithUserData();
 
@@ -39,6 +39,20 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         binding.buttonDeconnection.setEnabled(true);
         binding.buttonDeleteAccount.setEnabled(true);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences("AppSettingsPrefs", MODE_PRIVATE);
+        String currentTheme = prefs.getString("SelectedTheme", "BaseTheme");
+
+        if (lastAppliedTheme == null) {
+            lastAppliedTheme = currentTheme;
+        } else if (!lastAppliedTheme.equals(currentTheme)) {
+            lastAppliedTheme = currentTheme;
+            recreate(); // Recrée l'activité si le thème a changé
+        }
     }
 
     private void updateUIWithUserData() {
@@ -117,6 +131,19 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
                     .show();
 
         });
+    }
+
+    private void applySelectedTheme() {
+        SharedPreferences prefs = getSharedPreferences("AppSettingsPrefs", MODE_PRIVATE);
+        String themeName = prefs.getString("SelectedTheme", "BaseTheme");
+
+        if (themeName.equals("LightTheme")) {
+            setTheme(R.style.LightTheme);
+        } else if (themeName.equals("DarkTheme")) {
+            setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.BaseTheme);
+        }
     }
 
 }

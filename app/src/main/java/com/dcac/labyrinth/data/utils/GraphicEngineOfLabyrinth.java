@@ -1,4 +1,4 @@
-package com.dcac.labyrinth.data.game;
+package com.dcac.labyrinth.data.utils;
 
 
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
+
+import com.dcac.labyrinth.data.models.Ball;
+import com.dcac.labyrinth.data.models.Block;
 
 public class GraphicEngineOfLabyrinth extends View {
 
