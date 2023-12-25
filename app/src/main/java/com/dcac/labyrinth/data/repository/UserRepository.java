@@ -88,7 +88,7 @@ public final class UserRepository {
             if (user != null) {
                 createUser(uid, userName, urlPicture, email, user.getScore());
             } else {
-                createUser(uid, userName, urlPicture, "", 0);
+                createUser(uid, userName, urlPicture, email, 0);
             }
         });
 

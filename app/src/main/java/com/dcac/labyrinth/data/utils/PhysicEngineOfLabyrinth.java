@@ -15,6 +15,7 @@ public class PhysicEngineOfLabyrinth {
     private Ball ball;
     private List<Block> blocks;
 
+    private int score=0;
 
     private Block startBlock; // START BLOCK
 
@@ -25,6 +26,7 @@ public class PhysicEngineOfLabyrinth {
     private boolean gameWon = false; // FLAG TO KEEP GAME WIN STATE
     private boolean gameLost = false; // FLAG TO KEEP GAME LOST STATE
 
+    private ScoreChangeListener scoreChangeListener;
     private GraphicEngineOfLabyrinth graphicEngineOfLabyrinth;
 
 
@@ -36,6 +38,10 @@ public class PhysicEngineOfLabyrinth {
         this.width = width;
         this.height = height;
         this.graphicEngineOfLabyrinth = new GraphicEngineOfLabyrinth(context, this, blockSize);
+    }
+
+    public void setScoreChangeListener(ScoreChangeListener listener) {
+        this.scoreChangeListener = listener;
     }
 
     public Ball getBall() {
@@ -119,10 +125,12 @@ public class PhysicEngineOfLabyrinth {
                 // CHKEC IF THE BALL GET TO THE END ZONE
                 if (newX == endBlock.getX() && newY == endBlock.getY()) {
                     gameWon = true; // GAME WIN
+                    gainPoints(20);
                 }
             } else {
                 // BALL FALL IN A HOLE
                 gameLost = true; // GAME LOST
+                losePoints(2);
                 ball.setX(startBlock.getX());
                 ball.setY(startBlock.getY());
                 graphicEngineOfLabyrinth.invalidate();
@@ -224,8 +232,32 @@ public class PhysicEngineOfLabyrinth {
             default: return Color.TRANSPARENT;
         }
     }
+    public void losePoints(int points) {
+        score -= points;
+        if(scoreChangeListener != null) {
+            scoreChangeListener.onScoreChanged(score);
+        }
+    }
 
 
+    public void gainPoints(int points) {
+        score += points;
+        if (scoreChangeListener != null) {
+            scoreChangeListener.onScoreChanged(score);
+        }
 
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void resetScore() {
+        score = 0;
+    }
+
+    public interface ScoreChangeListener {
+        void onScoreChanged(int newScore);
+    }
 }
 

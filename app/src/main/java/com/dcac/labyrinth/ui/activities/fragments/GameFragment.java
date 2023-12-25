@@ -67,6 +67,7 @@ public class GameFragment extends Fragment {
         binding.buttonLeft.setEnabled(true);
         binding.buttonRight.setEnabled(true);
 
+
         final Runnable checkGameState = new Runnable() {
             @Override
             public void run() {
@@ -112,6 +113,12 @@ public class GameFragment extends Fragment {
 
         initGameComponents();
 
+        physicEngineOfLabyrinth.setScoreChangeListener(new PhysicEngineOfLabyrinth.ScoreChangeListener() {
+            @Override
+            public void onScoreChanged(int newScore) {
+                updateScoreDisplay(newScore);
+            }
+        });
     }
 
 
@@ -262,6 +269,12 @@ public class GameFragment extends Fragment {
 
         };
         physicEngineOfLabyrinth.loadNewLabyrinth(newLabyrinthLayout);
+    }
+
+    private void updateScoreDisplay(int score) {
+        if (binding != null) {
+            binding.userScore.setText(String.valueOf(score));
+        }
     }
 
 }

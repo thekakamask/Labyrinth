@@ -73,12 +73,14 @@ public class WelcomeFragment extends Fragment {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         if (user != null) {
                             // UPDATE TEXTBUTTON AND TEXTVIEW
-                            binding.buttonLogin.setText(R.string.disconnect);
+                            updateLoginStatus();
+                            userManager.createUser(user.getUid());
+                            /*binding.buttonLogin.setText(R.string.disconnect);
                             binding.buttonAccount.setEnabled(true);
                             binding.buttonAccount.setText(user.getEmail());
                             binding.buttonLogin.setEnabled(false);
                             int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
-                            binding.buttonAccount.setBackgroundColor(backgroundColor);
+                            binding.buttonAccount.setBackgroundColor(backgroundColor);*/
                            // binding.buttonAccount.setBackgroundColor(16767117);
 
                         showSnackBar(getString(R.string.connection_succeed));

@@ -50,6 +50,7 @@
     <string name="popup_message_confirmation_delete_account">Do you confirm deleting your account ?</string>
     <string name="popup_message_choice_yes">Yes</string>
     <string name="popup_message_choice_no">No</string>
+    <string name="confirm_change_username">Confirm</string>
 
     <!-- UserRepository -->
     <string name="unknown_error">Unknown error</string>
