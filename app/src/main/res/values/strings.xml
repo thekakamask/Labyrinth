@@ -30,11 +30,14 @@
     <string name="button_down_arrow">Down arrow of button</string>
     <string name="button_left_arrow">Left arrow of button</string>
     <string name="button_right_arrow">Right arrow of button</string>
+    <string name="Error_data_recuperation">Error data recuperation</string>
+
     <!-- Score Fragment -->
     <string name="title_score_fragment">Score</string>
     <!-- Score Fragment Item -->
     <string name="user_name">Username</string>
-    <string name="user_score">00</string>
+    <string name="user_score">0</string>
+    <string name="error_charging_scores">Error charging scores.</string>
 
     <!-- Account Fragment -->
     <string name="username">Username</string>
@@ -54,6 +57,5 @@
 
     <!-- UserRepository -->
     <string name="unknown_error">Unknown error</string>
-
 
 </resources>

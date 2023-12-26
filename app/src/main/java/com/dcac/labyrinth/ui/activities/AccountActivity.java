@@ -33,8 +33,8 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         applySelectedTheme();
+        super.onCreate(savedInstanceState);
         setupListeners();
         updateUIWithUserData();
 
@@ -66,6 +66,7 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
                 User user = documentSnapshot.toObject(User.class);
                 if (user != null) {
                     displayUserInfo(user);
+                    //displayUserScore(user.getScore());
                 }
             }).addOnFailureListener( e -> {
                 Toast.makeText(this, "Error with the recuperation tentative", Toast.LENGTH_SHORT).show();
@@ -165,7 +166,14 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         // Afficher le nom d'utilisateur et l'e-mail
         binding.userIdNameInput.setText(user.getUserName());
         binding.userMail.setText(user.getEmail());
+        binding.userScore.setText(String.valueOf(user.getScore()));
     }
+
+    /*private void displayUserScore(int score) {
+        binding.userScore.setText(String.valueOf(score));
+    }*/
+
+
 
     private void applySelectedTheme() {
         SharedPreferences prefs = getSharedPreferences("AppSettingsPrefs", MODE_PRIVATE);
@@ -182,9 +190,9 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
 
     private void updateUserName(String newUserName) {
         if (!TextUtils.isEmpty(newUserName)) {
-            FirebaseUser firebaseUser = userManager.getCurrentUser();
-            if (firebaseUser != null) {
-                String uid = firebaseUser.getUid();
+            FirebaseUser currentUser = userManager.getCurrentUser();
+            if (currentUser != null) {
+                String uid = currentUser.getUid();
                 userManager.updateUserName(uid, newUserName);
             }
         }

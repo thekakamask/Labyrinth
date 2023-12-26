@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserManager {
 
@@ -57,6 +58,10 @@ public class UserManager {
 
     public CollectionReference getUsersCollection() {
         return userRepository.getUsersCollection();
+    }
+
+    public Task<QuerySnapshot> getAllUsers() {
+        return userRepository.getAllusers();
     }
 
     public void updateScore(String uid, int score) {

@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
 
@@ -46,6 +48,10 @@ public final class UserRepository {
 
     public CollectionReference getUsersCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_USERS);
+    }
+
+    public Task<QuerySnapshot> getAllusers() {
+        return getUsersCollection().get();
     }
 
     //CREEZ UN USER DE FIREBASE AVEC SES PROPRIETES GENERIQUE MAIL ETC PUIS CREEZE EN UN NOUVEAU A PARTIR DE LUSER FIREBASE

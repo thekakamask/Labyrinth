@@ -16,11 +16,16 @@ import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 
+import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.data.models.Ball;
 import com.dcac.labyrinth.data.models.Block;
+import com.dcac.labyrinth.data.models.User;
+import com.dcac.labyrinth.data.repository.UserRepository;
 import com.dcac.labyrinth.data.utils.GraphicEngineOfLabyrinth;
 import com.dcac.labyrinth.data.utils.PhysicEngineOfLabyrinth;
 import com.dcac.labyrinth.databinding.FragmentGameBinding;
+import com.dcac.labyrinth.viewModels.UserManager;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,7 @@ import java.util.List;
 
 public class GameFragment extends Fragment {
 
+    UserManager userManager = UserManager.getInstance();
     private FragmentGameBinding binding;
     private GraphicEngineOfLabyrinth graphicEngineOfLabyrinth;
     private PhysicEngineOfLabyrinth physicEngineOfLabyrinth;
@@ -117,7 +123,23 @@ public class GameFragment extends Fragment {
             @Override
             public void onScoreChanged(int newScore) {
                 updateScoreDisplay(newScore);
+                FirebaseUser currentUser = userManager.getCurrentUser();
+                if (currentUser != null) {
+                    String uid = currentUser.getUid();
+                    userManager.updateScore(uid,newScore);
+                }
+
             }
+
+        });
+
+        FirebaseUser currentUser = userManager.getCurrentUser();
+        String uid = currentUser.getUid();
+        userManager.getUserData(uid).addOnSuccessListener(documentSnapshot -> {
+            User user = documentSnapshot.toObject(User.class);
+            updateScoreDisplay(user.getScore());
+        }).addOnFailureListener(e -> {
+            Log.e("GameFragment", getString(R.string.Error_data_recuperation), e);
         });
     }
 
