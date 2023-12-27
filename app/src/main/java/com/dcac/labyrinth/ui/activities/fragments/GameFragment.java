@@ -20,7 +20,6 @@ import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.data.models.Ball;
 import com.dcac.labyrinth.data.models.Block;
 import com.dcac.labyrinth.data.models.User;
-import com.dcac.labyrinth.data.repository.UserRepository;
 import com.dcac.labyrinth.data.utils.GraphicEngineOfLabyrinth;
 import com.dcac.labyrinth.data.utils.PhysicEngineOfLabyrinth;
 import com.dcac.labyrinth.databinding.FragmentGameBinding;
@@ -119,16 +118,12 @@ public class GameFragment extends Fragment {
 
         initGameComponents();
 
-        physicEngineOfLabyrinth.setScoreChangeListener(new PhysicEngineOfLabyrinth.ScoreChangeListener() {
-            @Override
-            public void onScoreChanged(int newScore) {
-                updateScoreDisplay(newScore);
-                FirebaseUser currentUser = userManager.getCurrentUser();
-                if (currentUser != null) {
-                    String uid = currentUser.getUid();
-                    userManager.updateScore(uid,newScore);
-                }
-
+        physicEngineOfLabyrinth.setScoreChangeListener(newScore -> {
+            updateScoreDisplay(newScore);
+            FirebaseUser currentUser = userManager.getCurrentUser();
+            if (currentUser != null) {
+                String uid = currentUser.getUid();
+                userManager.updateScore(uid,newScore);
             }
 
         });
@@ -138,9 +133,7 @@ public class GameFragment extends Fragment {
         userManager.getUserData(uid).addOnSuccessListener(documentSnapshot -> {
             User user = documentSnapshot.toObject(User.class);
             updateScoreDisplay(user.getScore());
-        }).addOnFailureListener(e -> {
-            Log.e("GameFragment", getString(R.string.Error_data_recuperation), e);
-        });
+        }).addOnFailureListener(e -> Log.e("GameFragment", getString(R.string.Error_data_recuperation), e));
     }
 
 

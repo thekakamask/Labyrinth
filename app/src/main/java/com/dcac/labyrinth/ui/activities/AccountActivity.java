@@ -11,6 +11,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dcac.labyrinth.R;
@@ -18,6 +21,10 @@ import com.dcac.labyrinth.data.models.User;
 import com.dcac.labyrinth.viewModels.UserManager;
 import com.dcac.labyrinth.databinding.ActivityAccountBinding;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.Objects;
 
 public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
 
@@ -26,6 +33,15 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
 
     private String lastAppliedTheme;
     private boolean isEditingUsername = false;
+
+    private final ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        if (uri != null) {
+            setProfilePicture(uri);
+            uploadImageToFirestore(uri);
+        }
+    });
+
+
 
     protected ActivityAccountBinding getViewBinding(){
         return ActivityAccountBinding.inflate(getLayoutInflater());
@@ -41,6 +57,7 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         binding.buttonChangeUsername.setEnabled(true);
         binding.buttonDeconnection.setEnabled(true);
         binding.buttonDeleteAccount.setEnabled(true);
+        binding.buttonChangeImage.setEnabled(true);
 
     }
 
@@ -54,7 +71,7 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
             lastAppliedTheme = currentTheme;
         } else if (!lastAppliedTheme.equals(currentTheme)) {
             lastAppliedTheme = currentTheme;
-            recreate(); // Recrée l'activité si le thème a changé
+            recreate();
         }
     }
 
@@ -68,9 +85,7 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
                     displayUserInfo(user);
                     //displayUserScore(user.getScore());
                 }
-            }).addOnFailureListener( e -> {
-                Toast.makeText(this, "Error with the recuperation tentative", Toast.LENGTH_SHORT).show();
-            });
+            }).addOnFailureListener( e -> Toast.makeText(this, "Error with the recuperation tentative", Toast.LENGTH_SHORT).show());
 
             /*if (user.getPhotoUrl() != null) {
                 setProfilePicture(user.getPhotoUrl());
@@ -130,33 +145,32 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         });
         });
 
-        binding.buttonDeconnection.setOnClickListener(view -> {
-            userManager.signOut(this).addOnSuccessListener(aVoid -> {
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
-            });
-        });
+        binding.buttonDeconnection.setOnClickListener(view -> userManager.signOut(this).addOnSuccessListener(aVoid -> {
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }));
 
         // DELETE BUTTON
-        binding.buttonDeleteAccount.setOnClickListener(view -> {
+        binding.buttonDeleteAccount.setOnClickListener(view -> new AlertDialog.Builder(this)
+                .setMessage(R.string.popup_message_confirmation_delete_account)
+                .setPositiveButton(R.string.popup_message_choice_yes, (dialogInterface, i) ->
+                        userManager.deleteUser(AccountActivity.this)
+                                .addOnSuccessListener(aVoid -> {
+                                    Intent returnIntent = new Intent();
+                                    setResult(Activity.RESULT_OK, returnIntent);
+                                    finish();
+                                        }
+                                )
+                )
+                .setNegativeButton(R.string.popup_message_choice_no, null)
+                .show());
 
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.popup_message_confirmation_delete_account)
-                    .setPositiveButton(R.string.popup_message_choice_yes, (dialogInterface, i) ->
-                            userManager.deleteUser(AccountActivity.this)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Intent returnIntent = new Intent();
-                                        setResult(Activity.RESULT_OK, returnIntent);
-                                        finish();
-                                            }
-                                    )
-                    )
-                    .setNegativeButton(R.string.popup_message_choice_no, null)
-                    .show();
+        binding.buttonChangeImage.setOnClickListener(view -> mGetContent.launch("image/*"));
 
-        });
     }
+
+
 
     private void displayUserInfo(User user) {
         if (user.getUrlPicture() != null && !user.getUrlPicture().isEmpty()) {
@@ -198,4 +212,29 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         }
     }
 
+    private void uploadImageToFirestore(Uri imageUri) {
+
+        FirebaseUser currentUser = userManager.getCurrentUser();
+        if (currentUser != null && imageUri != null) {
+            String uid = currentUser.getUid();
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("profileImages/" + uid);
+
+            storageReference.putFile(imageUri)
+                    .continueWithTask(task -> {
+                        if (!task.isSuccessful()) {
+                            throw Objects.requireNonNull(task.getException());
+                        }
+                        return storageReference.getDownloadUrl();
+                    })
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            userManager.updateUrlPicture(uid, downloadUri.toString());
+                        } else {
+                            // Gérer l'erreur de téléchargement
+                            Toast.makeText(AccountActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
 }

@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Objects;
@@ -115,6 +114,10 @@ public final class UserRepository {
 
     public void updateUserName(String uid, String userName) {
         getUsersCollection().document(uid).update("userName", userName);
+    }
+
+    public void updateUrlPicture(String uid, String urlPicture) {
+        getUsersCollection().document(uid).update("urlPicture", urlPicture);
     }
 
 

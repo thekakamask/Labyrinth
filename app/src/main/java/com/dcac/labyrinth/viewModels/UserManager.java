@@ -72,6 +72,10 @@ public class UserManager {
         userRepository.updateUserName(uid, userName);
     }
 
+    public void updateUrlPicture(String uid, String urlPicture) {
+        userRepository.updateUrlPicture(uid, urlPicture);
+    }
+
 
 
 

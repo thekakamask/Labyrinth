@@ -108,43 +108,40 @@ public class ParametersActivityAdapter extends BaseExpandableListAdapter {
         holder.element_child_description.setText(childItem.getDescription());
         holder.element_child_checkbox.setChecked(childItem.isChecked());
 
-        holder.element_child_checkbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Décocher toutes les autres CheckBox du groupe
-                for (int i = 0; i < getChildrenCount(groupPosition); i++) {
-                    ParametersItem item = listTabOngletsData.get(listTabsTitle.get(groupPosition)).get(i);
-                    item.setChecked(i == childPosition);
+        holder.element_child_checkbox.setOnClickListener(v -> {
+            // Décocher toutes les autres CheckBox du groupe
+            for (int i = 0; i < getChildrenCount(groupPosition); i++) {
+                ParametersItem item = listTabOngletsData.get(listTabsTitle.get(groupPosition)).get(i);
+                item.setChecked(i == childPosition);
+            }
+
+            // Cocher la CheckBox actuelle
+            //childItem.setChecked(true);
+            notifyDataSetChanged(); // Rafraîchir la vue
+
+            if (groupPosition == 0) { // Si c'est le groupe des thèmes
+                String themeName = null;
+                int themeIndex = -1;
+                switch (childItem.getTitle()) {
+                    case "Light theme":
+                        themeName = "LightTheme";
+                        themeIndex = 1;
+                        break;
+                    case "Dark theme":
+                        themeName = "DarkTheme";
+                        themeIndex = 2;
+                        break;
+                    default:
+                        themeName = "BaseTheme";
+                        themeIndex = 0;
+                        break;
                 }
+                SharedPreferences prefs = context.getSharedPreferences("AppSettingsPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("SelectedThemeIndex", themeIndex);
+                editor.apply();
 
-                // Cocher la CheckBox actuelle
-                //childItem.setChecked(true);
-                notifyDataSetChanged(); // Rafraîchir la vue
-
-                if (groupPosition == 0) { // Si c'est le groupe des thèmes
-                    String themeName = null;
-                    int themeIndex = -1;
-                    switch (childItem.getTitle()) {
-                        case "Light theme":
-                            themeName = "LightTheme";
-                            themeIndex = 1;
-                            break;
-                        case "Dark theme":
-                            themeName = "DarkTheme";
-                            themeIndex = 2;
-                            break;
-                        default:
-                            themeName = "BaseTheme";
-                            themeIndex = 0;
-                            break;
-                    }
-                    SharedPreferences prefs = context.getSharedPreferences("AppSettingsPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt("SelectedThemeIndex", themeIndex);
-                    editor.apply();
-
-                    onThemeChangeListener.onThemeChanged(themeName);
-                }
+                onThemeChangeListener.onThemeChanged(themeName);
             }
         });
 

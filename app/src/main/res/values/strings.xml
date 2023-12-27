@@ -10,10 +10,11 @@
     <string name="disconnect">Currently connected</string>
     <string name="connection_method">Choose a connection method</string>
 
-    <string name="error_authentication_canceled">Authentification annulée&#8230;</string>
-    <string name="connection_succeed">Authentification réussie !</string>
-    <string name="error_unknown_error">Une erreur inconnue s\'est produite&#8230;</string>
-    <string name="error_no_internet">Aucune connexion internet !</string>
+    <string name="error_authentication_canceled">Auth Cancelled&#8230;</string>
+    <string name="connection_succeed">Auth successful !</string>
+    <string name="error_unknown_error">Unknown error happened&#8230;</string>
+    <string name="error_no_internet">No internet connection !</string>
+    <string name="account_created_successfully">You have successfully create your account</string>
 
     <!-- Parameters Activity -->
     <string name="title_parameters_activity">Parameters</string>
@@ -54,6 +55,9 @@
     <string name="popup_message_choice_yes">Yes</string>
     <string name="popup_message_choice_no">No</string>
     <string name="confirm_change_username">Confirm</string>
+    <string name="update_image">Update your profile image</string>
+    <string name="permission_required_to_pick_an_image">Permission required to pick an image</string>
+    <string name="upload_failed">Upload failed</string>
 
     <!-- UserRepository -->
     <string name="unknown_error">Unknown error</string>

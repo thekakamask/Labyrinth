@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dcac.labyrinth">
 
-<!--    <uses-permission android:name="android.permission.INTERNET"/>-->
-
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -36,6 +35,16 @@
 
 
         </activity>
+
+        <!--<provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.dcac.Labyrinth.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>-->
 
 
 
