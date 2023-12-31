@@ -3,5 +3,10 @@
 
     <attr name="application_logo" format="reference"/>
     <attr name="profile_logo" format="reference"/>
-
+    <attr name="password_logo" format="reference"/>
+    <attr name="password_logo_close" format="reference"/>
+    <attr name="button_arrow_up" format="reference"/>
+    <attr name="button_arrow_down" format="reference"/>
+    <attr name="button_arrow_left" format="reference"/>
+    <attr name="button_arrow_right" format="reference"/>
 </resources>

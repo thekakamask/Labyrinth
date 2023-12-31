@@ -59,7 +59,8 @@
             android:gravity="start"
             android:layout_marginStart="10dp"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="?attr/colorButtonNormal"/>
 
         <TextView
             android:id="@+id/user_score"
@@ -70,7 +71,8 @@
             android:gravity="start"
             android:textStyle="bold"
             android:layout_marginEnd="30dp"
-            android:text="@string/user_score"/>
+            android:text="@string/user_score"
+            android:textColor="?attr/colorButtonNormal"/>
 
     </LinearLayout>
     <!-- Joystick Container -->
@@ -87,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/button_top_arrow"
-            android:src="@drawable/button_arrow_top_80"
+            android:src="?attr/button_arrow_up"
             android:layout_marginBottom="5dp"
             android:layout_centerHorizontal="true"
             android:background="?android:attr/selectableItemBackground"/>
@@ -97,7 +99,7 @@
             android:id="@+id/buttonLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_arrow_left_80"
+            android:src="?attr/button_arrow_left"
             android:layout_marginTop="55dp"
             android:contentDescription="@string/button_left_arrow"
             android:layout_toLeftOf="@id/buttonTop"
@@ -108,7 +110,7 @@
             android:id="@+id/buttonRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_arrow_right_80"
+            android:src="?attr/button_arrow_right"
             android:layout_marginTop="55dp"
             android:contentDescription="@string/button_right_arrow"
             android:layout_toRightOf="@id/buttonTop"
@@ -119,7 +121,7 @@
             android:id="@+id/buttonBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/button_arrow_down_80"
+            android:src="?attr/button_arrow_down"
             android:layout_below="@id/buttonTop"
             android:layout_marginTop="5dp"
             android:contentDescription="@string/button_down_arrow"

@@ -36,19 +36,19 @@
 
 
     <ImageView
-        android:id="@+id/files_explorer_image"
+        android:id="@+id/labyrinth_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/image_parameter_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="140dp"
-        android:src="@drawable/labyrinth_logo" />
+        android:src="?attr/application_logo" />
 
     <Button
         android:id="@+id/button_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/files_explorer_image"
+        android:layout_below="@id/labyrinth_image"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:layout_marginTop="100dp"

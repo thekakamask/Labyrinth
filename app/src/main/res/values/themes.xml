@@ -20,7 +20,15 @@
 
         <item name="application_logo">@drawable/labyrinth_logo</item>
 
-        <item name="profile_logo">@drawable/profile_icon_150</item>
+        <item name="profile_logo">@drawable/profile_icon_150_white</item>
+
+        <item name="password_logo">@drawable/password_eye_white</item>
+        <item name="password_logo_close">@drawable/password_eye_closed_white</item>
+
+        <item name="button_arrow_up">@drawable/button_arrow_top_80_white</item>
+        <item name="button_arrow_down">@drawable/button_arrow_down_80_white</item>
+        <item name="button_arrow_left">@drawable/button_arrow_left_80_white</item>
+        <item name="button_arrow_right">@drawable/button_arrow_right_80_white</item>
 
     </style>
 
@@ -42,6 +50,14 @@
 
         <item name="profile_logo">@drawable/profile_icon_150</item>
 
+        <item name="password_logo">@drawable/password_eye</item>
+        <item name="password_logo_close">@drawable/password_eye_closed</item>
+
+        <item name="button_arrow_up">@drawable/button_arrow_top_80</item>
+        <item name="button_arrow_down">@drawable/button_arrow_down_80</item>
+        <item name="button_arrow_left">@drawable/button_arrow_left_80</item>
+        <item name="button_arrow_right">@drawable/button_arrow_right_80</item>
+
     </style>
 
     <!-- DarkTheme -->
@@ -59,6 +75,14 @@
         <item name="application_logo">@drawable/labyrinth_logo</item>
 
         <item name="profile_logo">@drawable/profile_icon_150_white</item>
+
+        <item name="password_logo">@drawable/password_eye_white</item>
+        <item name="password_logo_close">@drawable/password_eye_closed_white</item>
+
+        <item name="button_arrow_up">@drawable/button_arrow_top_80_white</item>
+        <item name="button_arrow_down">@drawable/button_arrow_down_80_white</item>
+        <item name="button_arrow_left">@drawable/button_arrow_left_80_white</item>
+        <item name="button_arrow_right">@drawable/button_arrow_right_80_white</item>
 
     </style>
 

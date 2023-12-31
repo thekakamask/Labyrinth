@@ -1,7 +1,5 @@
 package com.dcac.labyrinth.data.models;
 
-import javax.annotation.Nullable;
-
 public class User {
 
     private String uid;

@@ -20,7 +20,10 @@ import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.data.models.User;
 import com.dcac.labyrinth.viewModels.UserManager;
 import com.dcac.labyrinth.databinding.ActivityAccountBinding;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -123,7 +126,6 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
             } else {
                 String newUsername = binding.userIdNameInput.getText().toString();
                 updateUserName(newUsername);
-
                 binding.userIdNameInput.setEnabled(false);
                 binding.buttonChangeUsername.setText(R.string.update_username);
 
@@ -154,15 +156,57 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         // DELETE BUTTON
         binding.buttonDeleteAccount.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setMessage(R.string.popup_message_confirmation_delete_account)
-                .setPositiveButton(R.string.popup_message_choice_yes, (dialogInterface, i) ->
-                        userManager.deleteUser(AccountActivity.this)
+                .setPositiveButton(R.string.popup_message_choice_yes, (dialogInterface, i) -> {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+
+                        String uid = user.getUid();
+
+                        user.delete().addOnSuccessListener(aVoid-> {
+                            Intent returnIntent = new Intent();
+                            setResult(Activity.RESULT_OK, returnIntent);
+                            finish();
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(AccountActivity.this, R.string.error_deleting_account, Toast.LENGTH_SHORT).show();
+                        });
+
+                        FirebaseFirestore.getInstance().collection("users").document(uid).delete().addOnSuccessListener(aVoid -> {
+
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(AccountActivity.this, R.string.error_deleting_storage, Toast.LENGTH_SHORT).show();
+                        });
+
+                        FirebaseStorage.getInstance().getReference().child("profileImages/" + uid).delete().addOnSuccessListener(aVoid -> {
+
+                        }).addOnFailureListener(e -> {
+                            Toast.makeText(AccountActivity.this, R.string.error_deleting_image, Toast.LENGTH_SHORT).show();
+
+                        });
+
+
+
+                        /*FirebaseFirestore.getInstance().collection("users").document(uid).delete()
                                 .addOnSuccessListener(aVoid -> {
-                                    Intent returnIntent = new Intent();
-                                    setResult(Activity.RESULT_OK, returnIntent);
-                                    finish();
-                                        }
-                                )
-                )
+
+                                    FirebaseStorage.getInstance().getReference().child("profileImages/" + uid).delete()
+                                            .addOnSuccessListener(aVoidStorage -> {
+
+                                                user.delete().addOnSuccessListener(aVoidAuth -> {
+
+                                                    Intent returnIntent = new Intent();
+                                                    setResult(Activity.RESULT_OK, returnIntent);
+                                                    finish();
+                                                }).addOnFailureListener(e -> {
+                                                    Toast.makeText(AccountActivity.this, R.string.error_deleting_account, Toast.LENGTH_SHORT).show();
+                                                });
+                                            }).addOnFailureListener(e -> {
+                                                Toast.makeText(AccountActivity.this, R.string.error_deleting_storage, Toast.LENGTH_SHORT).show();
+                                            });
+                                }).addOnFailureListener(e -> {
+                                    Toast.makeText(AccountActivity.this, R.string.error_deleting_firestore, Toast.LENGTH_SHORT).show();
+                                });*/
+                    }
+                })
                 .setNegativeButton(R.string.popup_message_choice_no, null)
                 .show());
 

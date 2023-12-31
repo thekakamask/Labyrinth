@@ -1,14 +1,11 @@
 package com.dcac.labyrinth.ui.activities.fragments;
 
-import static android.app.appsearch.AppSearchResult.RESULT_OK;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -28,33 +25,18 @@ import com.dcac.labyrinth.viewModels.UserManager;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
 import com.dcac.labyrinth.ui.activities.AccountActivity;
 import com.dcac.labyrinth.ui.activities.ParametersActivity;
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WelcomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class WelcomeFragment extends Fragment {
 
     private ActivityResultLauncher<Intent> accountActivityLauncher;
     private FragmentWelcomeBinding binding;
-    //private static final int RC_SIGN_IN = 123;
 
     private UserManager userManager = UserManager.getInstance();
 
-    private ActivityResultLauncher<Intent> signInOrUpLauncher;
+    //private ActivityResultLauncher<Intent> signInOrUpLauncher;
 
 
     public static WelcomeFragment newInstance() {
@@ -66,7 +48,7 @@ public class WelcomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        signInOrUpLauncher = registerForActivityResult(
+        /*signInOrUpLauncher = registerForActivityResult(
                 //regarder plus precisement son fontionnement
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -80,25 +62,7 @@ public class WelcomeFragment extends Fragment {
                             userManager.createUser(user.getUid());
                             showSnackBar(getString(R.string.connection_succeed));
                             updateLoginStatus();
-                            /*String uid = user.getUid();
-                            userManager.getUserData(uid).addOnSuccessListener(documentSnapshot -> {
-                                if (documentSnapshot.exists()) {
-                                    updateLoginStatus();
-                                    showSnackBar(getString(R.string.connection_succeed));
-                                } else {
-                                    userManager.createUser(uid);
-                                    updateLoginStatus();
-                                    showSnackBar(getString(R.string.account_created_successfully));
-                                }
-                            });*/
-                            // UPDATE TEXTBUTTON AND TEXTVIEW
-                            /*binding.buttonLogin.setText(R.string.disconnect);
-                            binding.buttonAccount.setEnabled(true);
-                            binding.buttonAccount.setText(user.getEmail());
-                            binding.buttonLogin.setEnabled(false);
-                            int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
-                            binding.buttonAccount.setBackgroundColor(backgroundColor);*/
-                           // binding.buttonAccount.setBackgroundColor(16767117);
+
                         }
                     } else {
                         IdpResponse response = IdpResponse.fromResultIntent(result.getData());
@@ -114,7 +78,7 @@ public class WelcomeFragment extends Fragment {
                         }
                     }
                 }
-        );
+        );*/
 
         accountActivityLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -125,7 +89,6 @@ public class WelcomeFragment extends Fragment {
                         binding.buttonAccount.setText(R.string.not_connected);
                         binding.buttonLogin.setEnabled(true);
                         binding.buttonAccount.setBackgroundColor(0);
-                        //binding.buttonAccount.setBackgroundColor();
                     }
 
                 }
@@ -138,17 +101,11 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentWelcomeBinding.inflate(inflater, container, false);
-        int logoResId = getThemeLogo(getContext());
-        binding.filesExplorerImage.setImageResource(logoResId);
+        //int logoResId = getThemeLogo(getContext());
+        //binding.labyrinthImage.setImageResource(logoResId);
         return binding.getRoot();
 
 
-    }
-
-    public static int getThemeLogo(Context context) {
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(R.attr.application_logo, typedValue, true);
-        return typedValue.resourceId;
     }
 
     @Override
@@ -157,24 +114,31 @@ public class WelcomeFragment extends Fragment {
 
         int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
         int connectionColor = ContextCompat.getColor(getContext(), R.color.google_blue);
+
         binding.buttonGame.setEnabled(true);
         binding.buttonGame.setBackgroundColor(backgroundColor);
+
         binding.buttonScore.setEnabled(true);
         binding.buttonScore.setBackgroundColor(backgroundColor);
+
         binding.imageParameterButton.setEnabled(true);
+
         binding.buttonLogin.setBackgroundColor(connectionColor);
         binding.buttonLogin.setEnabled(true);
-        binding.buttonAccount.setEnabled(false);
+
+        binding.buttonAccount.setEnabled(true);
         binding.buttonAccount.setBackgroundColor(0);
-        //binding.buttonLoginFacebook.setEnabled(true);
 
         updateLoginStatus();
 
 
 
         binding.buttonAccount.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AccountActivity.class);
-            accountActivityLauncher.launch(intent);
+            if (isUserLoggedIn()) {
+                openAccountFragment();
+            } else {
+                loginShowSnackBar(getString(R.string.you_must_have_an_account_to_see_your_profile));
+            }
         });
 
         binding.imageParameterButton.setOnClickListener(v -> {
@@ -183,56 +147,44 @@ public class WelcomeFragment extends Fragment {
         });
 
         binding.buttonGame.setOnClickListener(v -> {
-            FragmentManager fragmentManager= getParentFragmentManager();
-            FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-            GameFragment gameFragment= GameFragment.newInstance();
-            fragmentTransaction.add(R.id.fragment_container, gameFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
+            if (isUserLoggedIn()) {
+                openGameFragment();
+            } else {
+                loginShowSnackBar(getString(R.string.you_need_to_have_an_account_to_play));
+            }
 
         });
 
         binding.buttonScore.setOnClickListener(v -> {
-            FragmentManager fragmentManager= getParentFragmentManager();
-            FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-            ScoreFragment scoreFragment= ScoreFragment.newInstance();
-            fragmentTransaction.add(R.id.fragment_container, scoreFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            if (isUserLoggedIn()) {
+                openScoreFragment();
+            } else {
+                loginShowSnackBar(getString(R.string.you_need_to_have_an_account_to_see_scores));
+            }
         });
 
         binding.buttonLogin.setOnClickListener(v -> {
-            startMailAndGoogleInActivity();
-            /*String[] options = {"E-mail", "Google"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle(getString(R.string.connection_method))
-                    .setItems(options, (dialog, which) -> {
-                        switch (which) {
-                            case 0: // E-MAIL
-                                startMailSignInOrUpActivity();
-                                break;
-                            case 1: // GOOGLE
 
-                                startGoogleSignInActivity();
-                                break;
-                            *//*case 2: // FACEBOOK
-                                startFacebookSignInActivity();
-                                break;*//*
-                        }
-                    });
-            builder.show();*/
+            if (isUserLoggedIn()) {
+                FirebaseAuth.getInstance().signOut();
+                updateLoginStatus();
+                loginShowSnackBar(getString(R.string.logged_out));
+            } else {
+                openSignInFragment();
+            }
 
         });
 
-        /*binding.buttonLoginFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startFacebookSignInActivity();
-            }
-        });*/
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateLoginStatus();
+    }
+
+
 
     public static int getThemeColor(Context context, int attributeColor) {
         TypedValue typedValue = new TypedValue();
@@ -240,7 +192,15 @@ public class WelcomeFragment extends Fragment {
         return typedValue.data;
     }
 
-    private void startMailAndGoogleInActivity() {
+    /*public static int getThemeLogo(Context context) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.application_logo, typedValue, true);
+        return typedValue.resourceId;
+    }*/
+
+    /*private void startMailAndGoogleInActivity() {
+
+
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());
@@ -254,63 +214,21 @@ public class WelcomeFragment extends Fragment {
                 .build();
 
         signInOrUpLauncher.launch(MailAndGoogleIntent);
-    }
-
-    /*private void startMailSignInOrUpActivity() {
-
-        //CHOOSE AUTH PROVIDERS
-        List<AuthUI.IdpConfig> providers = Collections.singletonList(
-                new AuthUI.IdpConfig.EmailBuilder().build()
-        );
-
-        // LAUNCH CONNECTION ACTIVITY
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setTheme(R.style.LoginTheme)
-                .setLogo(R.drawable.account_icon_button)
-                .build();
-
-        signInOrUpLauncher.launch(signInIntent);
     }*/
 
-    /*private void startGoogleSignInActivity() {
-        List<AuthUI.IdpConfig> providers = Collections.singletonList(
-                new AuthUI.IdpConfig.GoogleBuilder().build());
 
-        Intent googleSignInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setTheme(R.style.LoginTheme)
-                .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false,true)
-                .setLogo(R.drawable.account_icon_button)
-                .build();
-
-        signInOrUpLauncher.launch(googleSignInIntent);
-    }*/
-
-    /*private void startFacebookSignInActivity(){
-        List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.FacebookBuilder().build());
-
-        Intent facebookSignInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setTheme(R.style.LoginTheme)
-                .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false,true)
-                .setLogo(R.drawable.account_icon_button)
-                .build();
-
-        signInLauncher.launch(facebookSignInIntent);
-    }*/
 
     private void updateLoginStatus() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // USER CONNECTED
-            binding.buttonLogin.setText(R.string.disconnect);
-            binding.buttonAccount.setEnabled(true);
+            binding.buttonLogin.setText(R.string.log_off);
+            binding.buttonLogin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_deconnection_button, 0, 0, 0); // Remplacez ic_log_off par votre icône de déconnexion
+            //binding.buttonAccount.setEnabled(true);
             binding.buttonAccount.setText(user.getEmail());
-            binding.buttonLogin.setEnabled(false);
+            //binding.buttonLogin.setEnabled(false);
+            //binding.buttonGame.setEnabled(true);
+            //binding.buttonScore.setEnabled(true);
             int backgroundColor = getThemeColor(getContext(), androidx.appcompat.R.attr.colorPrimary);
             binding.buttonAccount.setBackgroundColor(backgroundColor);
 
@@ -320,15 +238,55 @@ public class WelcomeFragment extends Fragment {
         } else {
             // USER NOT CONNECTED
             binding.buttonLogin.setText(R.string.log_in);
-            binding.buttonAccount.setEnabled(false);
+            binding.buttonLogin.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_icon_button, 0, 0, 0); // Remplacez ic_log_off par votre icône de déconnexion
+            //binding.buttonAccount.setEnabled(false);
             binding.buttonAccount.setText(R.string.not_connected);
             binding.buttonLogin.setEnabled(true);
+            //binding.buttonScore.setEnabled(false);
+            //binding.buttonGame.setEnabled(false);
             binding.buttonAccount.setBackgroundColor(0);
 
         }
     }
 
-    private void showSnackBar(String message) {
+    private boolean isUserLoggedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null;
+    }
+
+    private void openScoreFragment(){
+        FragmentManager fragmentManager= getParentFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        ScoreFragment scoreFragment= ScoreFragment.newInstance();
+        fragmentTransaction.add(R.id.fragment_container, scoreFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void openGameFragment() {
+        FragmentManager fragmentManager= getParentFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        GameFragment gameFragment= GameFragment.newInstance();
+        fragmentTransaction.add(R.id.fragment_container, gameFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void openAccountFragment() {
+        Intent intent = new Intent(getActivity(), AccountActivity.class);
+        accountActivityLauncher.launch(intent);
+    }
+
+    private void openSignInFragment() {
+        FragmentManager fragmentManager= getParentFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        SignInFragment signInFragment= SignInFragment.newInstance();
+        fragmentTransaction.add(R.id.fragment_container, signInFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void loginShowSnackBar(String message) {
         Snackbar.make(binding.welcomeFragmentMainLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 

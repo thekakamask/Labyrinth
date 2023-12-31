@@ -9,13 +9,16 @@
     <string name="button_parameters">Button parameters</string>
     <string name="disconnect">Currently connected</string>
     <string name="connection_method">Choose a connection method</string>
-
     <string name="error_authentication_canceled">Auth Cancelled&#8230;</string>
     <string name="connection_succeed">Auth successful !</string>
     <string name="error_unknown_error">Unknown error happened&#8230;</string>
     <string name="error_no_internet">No internet connection !</string>
     <string name="account_created_successfully">You have successfully create your account</string>
-
+    <string name="you_need_to_have_an_account_to_play">You must have an account to play</string>
+    <string name="you_need_to_have_an_account_to_see_scores">You must have an account to see scores</string>
+    <string name="you_must_have_an_account_to_see_your_profile">You must have an account to see your profile</string>
+    <string name="logged_out">You have been logged out</string>
+    <string name="log_off">Log off</string>
     <!-- Parameters Activity -->
     <string name="title_parameters_activity">Parameters</string>
     <!-- Parameters Activity Tabs -->
@@ -58,8 +61,18 @@
     <string name="update_image">Update your profile image</string>
     <string name="permission_required_to_pick_an_image">Permission required to pick an image</string>
     <string name="upload_failed">Upload failed</string>
+    <string name="error_deleting_account">Error deleting account</string>
+    <string name="error_deleting_storage">Error deleting storage</string>
+    <string name="error_deleting_image">No profile image to delete</string>
 
     <!-- UserRepository -->
     <string name="unknown_error">Unknown error</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- SignIn Fragment -->
+    <string name="text_sign_in_button_sign_in_fragment">Sign in</string>
+    <string name="email_edit_text_sign_in_fragment">Email</string>
+    <string name="password_edit_text_sign_in_fragment">Password</string>
+    <string name="text_sign_up_sign_in_fragment">Don\'t have an account? Sign Up</string>
+    <string name="authentication_failed">Authentication failed.</string>
 </resources>
