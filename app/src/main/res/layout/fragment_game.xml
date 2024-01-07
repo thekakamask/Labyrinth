@@ -37,7 +37,7 @@
         android:layout_height="420dp"
         android:layout_below="@id/header_parameters_activity"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"></FrameLayout>
 
@@ -90,7 +90,6 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/button_top_arrow"
             android:src="?attr/button_arrow_up"
-            android:layout_marginBottom="5dp"
             android:layout_centerHorizontal="true"
             android:background="?android:attr/selectableItemBackground"/>
 
@@ -99,11 +98,12 @@
             android:id="@+id/buttonLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="?attr/button_arrow_left"
-            android:layout_marginTop="55dp"
-            android:contentDescription="@string/button_left_arrow"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="5dp"
             android:layout_toLeftOf="@id/buttonTop"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/button_left_arrow"
+            android:src="?attr/button_arrow_left" />
 
         <!-- Right Button -->
         <ImageButton
@@ -111,7 +111,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="?attr/button_arrow_right"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginStart="5dp"
             android:contentDescription="@string/button_right_arrow"
             android:layout_toRightOf="@id/buttonTop"
             android:background="?android:attr/selectableItemBackground"/>

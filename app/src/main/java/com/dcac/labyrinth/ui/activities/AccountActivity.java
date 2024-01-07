@@ -1,6 +1,5 @@
 package com.dcac.labyrinth.ui.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,17 +12,19 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.data.models.User;
-import com.dcac.labyrinth.viewModels.UserManager;
+import com.dcac.labyrinth.data.utils.Resource;
+import com.dcac.labyrinth.injection.UserViewModelFactory;
+import com.dcac.labyrinth.viewModels.UserViewModel;
 import com.dcac.labyrinth.databinding.ActivityAccountBinding;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -32,10 +33,14 @@ import java.util.Objects;
 public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
 
     // RAJOUTER LES THEMES
-    private UserManager userManager = UserManager.getInstance();
+    private UserViewModel userViewModel;
 
     private String lastAppliedTheme;
     private boolean isEditingUsername = false;
+
+    private static final int MIN_USERNAME_LENGTH = 3;
+
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     private final ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         if (uri != null) {
@@ -53,15 +58,39 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         applySelectedTheme();
+        authStateListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                updateUIWithUserData();
+            } else {
+                Toast.makeText(this, R.string.you_are_not_logged_in, Toast.LENGTH_LONG).show();
+                redirectToWelcomeFragment();
+            }
+        };
         super.onCreate(savedInstanceState);
+        UserViewModelFactory factory = UserViewModelFactory.getInstance(getApplicationContext());
+        userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
         setupListeners();
-        updateUIWithUserData();
+
 
         binding.buttonChangeUsername.setEnabled(true);
         binding.buttonDeconnection.setEnabled(true);
         binding.buttonDeleteAccount.setEnabled(true);
         binding.buttonChangeImage.setEnabled(true);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authStateListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+        }
     }
 
     @Override
@@ -76,26 +105,44 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
             lastAppliedTheme = currentTheme;
             recreate();
         }
+
     }
+
+
 
     private void updateUIWithUserData() {
-        if (userManager.isCurrentUserLogged()) {
-            FirebaseUser firebaseUser = userManager.getCurrentUser();
-
-            userManager.getUserData(firebaseUser.getUid()).addOnSuccessListener(documentSnapshot -> {
-                User user = documentSnapshot.toObject(User.class);
-                if (user != null) {
-                    displayUserInfo(user);
-                    //displayUserScore(user.getScore());
+        userViewModel.getCurrentUser().observe(this, resource -> {
+            if (resource != null) {
+                if (resource.status == Resource.Status.SUCCESS) {
+                    FirebaseUser firebaseUser = resource.data;
+                    if (firebaseUser != null) {
+                        String uid = firebaseUser.getUid();
+                        updateUserDetails(uid);
+                    }
+                } else if (resource.status == Resource.Status.ERROR) {
+                    Toast.makeText(this, getString(R.string.error_fetching_user_data), Toast.LENGTH_SHORT).show();
+                    redirectToWelcomeFragment();
                 }
-            }).addOnFailureListener( e -> Toast.makeText(this, "Error with the recuperation tentative", Toast.LENGTH_SHORT).show());
-
-            /*if (user.getPhotoUrl() != null) {
-                setProfilePicture(user.getPhotoUrl());
             }
-            setTextUserData(user);*/
-        }
+        });
     }
+
+    private void updateUserDetails(String uid) {
+        userViewModel.getUserData(uid).observe(this, userDataResource -> {
+            if (userDataResource != null && userDataResource.status == Resource.Status.SUCCESS) {
+                DocumentSnapshot documentSnapshot = userDataResource.data;
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    displayUserInfo(user);
+                } else {
+                    Toast.makeText(this, R.string.user_data_not_found, Toast.LENGTH_SHORT).show();
+                }
+            } else if (userDataResource != null && userDataResource.status == Resource.Status.ERROR) {
+                Toast.makeText(this, R.string.error_fetching_user_data, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void setProfilePicture(Uri profilePictureUrl) {
         Glide.with(this)
@@ -147,73 +194,41 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
         });
         });
 
-        binding.buttonDeconnection.setOnClickListener(view -> userManager.signOut(this).addOnSuccessListener(aVoid -> {
-            Intent returnIntent = new Intent();
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
-        }));
+        binding.buttonChangeImage.setOnClickListener(view -> {
+            // Lancer l'intent pour choisir une image
+            mGetContent.launch("image/*");
+        });
+
+        binding.buttonDeconnection.setOnClickListener(view ->
+                userViewModel.signOut().observe(this, signOutResource -> {
+                    if (signOutResource != null && signOutResource.status == Resource.Status.SUCCESS) {
+                        redirectToWelcomeFragment();
+                    } else {
+                        Toast.makeText(this, R.string.deconnection_failed, Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
 
         // DELETE BUTTON
         binding.buttonDeleteAccount.setOnClickListener(view -> new AlertDialog.Builder(this)
                 .setMessage(R.string.popup_message_confirmation_delete_account)
-                .setPositiveButton(R.string.popup_message_choice_yes, (dialogInterface, i) -> {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-
-                        String uid = user.getUid();
-
-                        user.delete().addOnSuccessListener(aVoid-> {
-                            Intent returnIntent = new Intent();
-                            setResult(Activity.RESULT_OK, returnIntent);
-                            finish();
-                        }).addOnFailureListener(e -> {
-                            Toast.makeText(AccountActivity.this, R.string.error_deleting_account, Toast.LENGTH_SHORT).show();
-                        });
-
-                        FirebaseFirestore.getInstance().collection("users").document(uid).delete().addOnSuccessListener(aVoid -> {
-
-                        }).addOnFailureListener(e -> {
-                            Toast.makeText(AccountActivity.this, R.string.error_deleting_storage, Toast.LENGTH_SHORT).show();
-                        });
-
-                        FirebaseStorage.getInstance().getReference().child("profileImages/" + uid).delete().addOnSuccessListener(aVoid -> {
-
-                        }).addOnFailureListener(e -> {
-                            Toast.makeText(AccountActivity.this, R.string.error_deleting_image, Toast.LENGTH_SHORT).show();
-
-                        });
-
-
-
-                        /*FirebaseFirestore.getInstance().collection("users").document(uid).delete()
-                                .addOnSuccessListener(aVoid -> {
-
-                                    FirebaseStorage.getInstance().getReference().child("profileImages/" + uid).delete()
-                                            .addOnSuccessListener(aVoidStorage -> {
-
-                                                user.delete().addOnSuccessListener(aVoidAuth -> {
-
-                                                    Intent returnIntent = new Intent();
-                                                    setResult(Activity.RESULT_OK, returnIntent);
-                                                    finish();
-                                                }).addOnFailureListener(e -> {
-                                                    Toast.makeText(AccountActivity.this, R.string.error_deleting_account, Toast.LENGTH_SHORT).show();
-                                                });
-                                            }).addOnFailureListener(e -> {
-                                                Toast.makeText(AccountActivity.this, R.string.error_deleting_storage, Toast.LENGTH_SHORT).show();
-                                            });
-                                }).addOnFailureListener(e -> {
-                                    Toast.makeText(AccountActivity.this, R.string.error_deleting_firestore, Toast.LENGTH_SHORT).show();
-                                });*/
+                .setPositiveButton(R.string.popup_message_choice_yes, (dialogInterface, i) -> userViewModel.deleteUser().observe(this, deleteResource -> {
+                    if (deleteResource != null && deleteResource.status == Resource.Status.SUCCESS) {
+                        redirectToWelcomeFragment();
+                    } else {
+                        Toast.makeText(this, R.string.delete_user_failed, Toast.LENGTH_SHORT).show();
                     }
-                })
+                }))
                 .setNegativeButton(R.string.popup_message_choice_no, null)
                 .show());
-
-        binding.buttonChangeImage.setOnClickListener(view -> mGetContent.launch("image/*"));
-
     }
 
+    private void redirectToWelcomeFragment() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
 
     private void displayUserInfo(User user) {
@@ -247,38 +262,70 @@ public class AccountActivity extends BaseActivity<ActivityAccountBinding> {
     }
 
     private void updateUserName(String newUserName) {
-        if (!TextUtils.isEmpty(newUserName)) {
-            FirebaseUser currentUser = userManager.getCurrentUser();
-            if (currentUser != null) {
-                String uid = currentUser.getUid();
-                userManager.updateUserName(uid, newUserName);
-            }
+        if (!TextUtils.isEmpty(newUserName) && newUserName.length() >= MIN_USERNAME_LENGTH) {
+            userViewModel.getCurrentUser().observe(this, currentUserResource -> {
+                if (currentUserResource != null && currentUserResource.status == Resource.Status.SUCCESS) {
+                    FirebaseUser currentUser = currentUserResource.data;
+                    if (currentUser != null) {
+                        String uid = currentUser.getUid();
+                        userViewModel.updateUserName(uid, newUserName).observe(this, updateResource -> {
+                            if (updateResource != null && updateResource.status == Resource.Status.SUCCESS) {
+                                Toast.makeText(this, R.string.username_updated_successfully, Toast.LENGTH_SHORT).show();
+                            } else if (updateResource != null && updateResource.status == Resource.Status.ERROR) {
+                                Toast.makeText(this, R.string.failed_to_update_username, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(this, R.string.invalid_username, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void uploadImageToFirestore(Uri imageUri) {
-
-        FirebaseUser currentUser = userManager.getCurrentUser();
-        if (currentUser != null && imageUri != null) {
-            String uid = currentUser.getUid();
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("profileImages/" + uid);
-
-            storageReference.putFile(imageUri)
-                    .continueWithTask(task -> {
-                        if (!task.isSuccessful()) {
-                            throw Objects.requireNonNull(task.getException());
-                        }
-                        return storageReference.getDownloadUrl();
-                    })
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
-                            userManager.updateUrlPicture(uid, downloadUri.toString());
-                        } else {
-                            // Gérer l'erreur de téléchargement
-                            Toast.makeText(AccountActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        if (imageUri != null && isValidImageUrl(imageUri.toString())) {
+            userViewModel.getCurrentUser().observe(this, currentUserResource -> {
+                if (currentUserResource != null && currentUserResource.status == Resource.Status.SUCCESS) {
+                    FirebaseUser currentUser = currentUserResource.data;
+                    if (currentUser != null) {
+                        String uid = currentUser.getUid();
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("profileImages/" + uid);
+                        storageReference.putFile(imageUri)
+                                .continueWithTask(task -> {
+                                    if (!task.isSuccessful()) {
+                                        throw Objects.requireNonNull(task.getException());
+                                    }
+                                    return storageReference.getDownloadUrl();
+                                })
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Uri downloadUri = task.getResult();
+                                        userViewModel.updateUrlPicture(uid, downloadUri.toString()).observe(this, updateResource -> {
+                                            if (updateResource != null && updateResource.status == Resource.Status.SUCCESS) {
+                                                Toast.makeText(AccountActivity.this, "Image updated successfully", Toast.LENGTH_SHORT).show();
+                                            } else if (updateResource != null && updateResource.status == Resource.Status.ERROR) {
+                                                Toast.makeText(AccountActivity.this, "Failed to update image", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(AccountActivity.this, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(this, R.string.invalid_image_url, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean isValidImageUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            return false;
+        }
+
+        String regex = "https?://.+(\\.jpg|\\.png|\\.gif|\\.bmp)$";
+        return url.matches(regex);
     }
 }

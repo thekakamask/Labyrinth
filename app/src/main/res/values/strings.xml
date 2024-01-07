@@ -35,15 +35,16 @@
     <string name="button_left_arrow">Left arrow of button</string>
     <string name="button_right_arrow">Right arrow of button</string>
     <string name="Error_data_recuperation">Error data recuperation</string>
+    <string name="documentsnapshot_is_null_or_doesn_t_exist">DocumentSnapshot is null or doesn\'t exist</string>
 
     <!-- Score Fragment -->
     <string name="title_score_fragment">Score</string>
-    <!-- Score Fragment Item -->
+    <string name="Error_users_retrieval">Error during users retrieval</string>
     <string name="user_name">Username</string>
     <string name="user_score">0</string>
     <string name="error_charging_scores">Error charging scores.</string>
 
-    <!-- Account Fragment -->
+    <!-- Account Activity -->
     <string name="username">Username</string>
     <string name="email_address_label">Your email :</string>
     <string name="update_username">Update your username</string>
@@ -64,6 +65,17 @@
     <string name="error_deleting_account">Error deleting account</string>
     <string name="error_deleting_storage">Error deleting storage</string>
     <string name="error_deleting_image">No profile image to delete</string>
+    <string name="error_fetching_user_data">Error fetching user data</string>
+    <string name="error_creating_user">Error creating user</string>
+    <string name="delete_user_failed">Failed deleting your account</string>
+    <string name="username_updated_successfully">Username updated successfully</string>
+    <string name="failed_to_update_username">Failed to update username</string>
+    <string name="you_are_not_logged_in">You are not logged in.</string>
+    <string name="user_data_not_found">User data not found.</string>
+    <string name="no_user_is_currently_logged_in">No user is currently logged in.</string>
+    <string name="deconnection_failed">Deconnection failed</string>
+    <string name="invalid_image_url">Invalid image url</string>
+    <string name="invalid_username">Invalid username</string>
 
     <!-- UserRepository -->
     <string name="unknown_error">Unknown error</string>

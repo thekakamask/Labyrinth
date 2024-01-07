@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.ActivityMainBinding;
+import com.dcac.labyrinth.ui.activities.fragments.WelcomeFragment;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
@@ -18,6 +19,12 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     public void onCreate(Bundle savedInstanceState) {
         applySelectedTheme();
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new WelcomeFragment())
+                    .commit();
+        }
     }
 
     @Override

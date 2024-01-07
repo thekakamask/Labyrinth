@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dcac.labyrinth.R;
-import com.dcac.labyrinth.viewModels.UserManager;
 import com.dcac.labyrinth.databinding.FragmentWelcomeBinding;
 import com.dcac.labyrinth.ui.activities.AccountActivity;
 import com.dcac.labyrinth.ui.activities.ParametersActivity;
@@ -34,19 +33,31 @@ public class WelcomeFragment extends Fragment {
     private ActivityResultLauncher<Intent> accountActivityLauncher;
     private FragmentWelcomeBinding binding;
 
-    private UserManager userManager = UserManager.getInstance();
+    private FirebaseAuth.AuthStateListener authStateListener;
 
+    //private UserManager userManager = UserManager.getInstance();
     //private ActivityResultLauncher<Intent> signInOrUpLauncher;
 
 
     public static WelcomeFragment newInstance() {
-        WelcomeFragment fragment = new WelcomeFragment();
-        return fragment;
+        return new WelcomeFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        //UserManager userManager = new ViewModelProvider(this).get(UserManager.class);
         super.onCreate(savedInstanceState);
+
+        authStateListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                // user connected
+                updateLoginStatus();
+            } else {
+                // user not connected
+                updateLoginStatus();
+            }
+        };
 
         /*signInOrUpLauncher = registerForActivityResult(
                 //regarder plus precisement son fontionnement
@@ -94,6 +105,20 @@ public class WelcomeFragment extends Fragment {
                 }
         );
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authStateListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+        }
     }
 
 

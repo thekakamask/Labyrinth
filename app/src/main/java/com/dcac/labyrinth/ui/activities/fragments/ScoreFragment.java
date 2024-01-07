@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -20,24 +21,23 @@ import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.data.models.Score;
 import com.dcac.labyrinth.data.models.User;
 import com.dcac.labyrinth.databinding.FragmentScoreBinding;
+import com.dcac.labyrinth.injection.UserViewModelFactory;
 import com.dcac.labyrinth.ui.views.ScoreFragmentAdapter;
-import com.dcac.labyrinth.viewModels.UserManager;
+import com.dcac.labyrinth.viewModels.UserViewModel;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ScoreFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ScoreFragment extends Fragment {
 
-
+    private UserViewModel userViewModel;
     private FragmentScoreBinding binding;
     private ScoreFragmentAdapter adapter;
+
+
+
 
     public static ScoreFragment newInstance() {
         return new ScoreFragment();
@@ -46,6 +46,8 @@ public class ScoreFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UserViewModelFactory factory = UserViewModelFactory.getInstance(requireContext().getApplicationContext());
+        userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
 
     }
 
@@ -66,26 +68,40 @@ public class ScoreFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        // Configurez le Layout Manager et DividerItemDecoration
+        // Configure Layout Manager et DividerItemDecoration
         binding.scoreRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.scoreRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
         Drawable dividerDrawable = ContextCompat.getDrawable(getContext(), R.drawable.recycler_view_divider);
         dividerItemDecoration.setDrawable(dividerDrawable);
         binding.scoreRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        // Récupérez les données des utilisateurs
-        UserManager.getInstance().getAllUsers().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<Score> scores = new ArrayList<>();
-            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                User user = documentSnapshot.toObject(User.class);
-                if (user != null) {
-                    scores.add(new Score(user.getUserName(), user.getScore()));
+        // Get user data
+        userViewModel.getAllUsers().observe(getViewLifecycleOwner(), resource -> {
+            if (resource != null) {
+                switch (resource.status) {
+                    case SUCCESS:
+                        if (resource.data != null) {
+                            List<Score> scores = new ArrayList<>();
+                            for (DocumentSnapshot documentSnapshot : resource.data.getDocuments()) {
+                                User user = documentSnapshot.toObject(User.class);
+                                if (user != null) {
+                                    scores.add(new Score(user.getUserName(), user.getScore()));
+                                }
+                            }
+                            updateAdapter(scores);
+                        }
+                        break;
+                    case ERROR:
+                        Toast.makeText(getContext(), R.string.error_charging_scores, Toast.LENGTH_LONG).show();
+                        Log.e("ScoreFragment", getString(R.string.Error_users_retrieval));
+                        break;
+                    case LOADING:
+                        // Optional : display charging indicator
+                        break;
                 }
+            } else {
+                // Handle case if resource is null
             }
-            updateAdapter(scores); // Mettez à jour l'adaptateur avec les scores récupérés
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), R.string.error_charging_scores, Toast.LENGTH_LONG).show();
-            Log.e("ScoreFragment", "Erreur lors de la récupération des utilisateurs : ", e);
         });
     }
         /*List<Score> scores = new ArrayList<>();

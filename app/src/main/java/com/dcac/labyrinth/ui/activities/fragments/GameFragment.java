@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,9 +23,12 @@ import com.dcac.labyrinth.data.models.Block;
 import com.dcac.labyrinth.data.models.User;
 import com.dcac.labyrinth.data.utils.GraphicEngineOfLabyrinth;
 import com.dcac.labyrinth.data.utils.PhysicEngineOfLabyrinth;
+import com.dcac.labyrinth.data.utils.Resource;
 import com.dcac.labyrinth.databinding.FragmentGameBinding;
-import com.dcac.labyrinth.viewModels.UserManager;
+import com.dcac.labyrinth.injection.UserViewModelFactory;
+import com.dcac.labyrinth.viewModels.UserViewModel;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +36,7 @@ import java.util.List;
 
 public class GameFragment extends Fragment {
 
-    UserManager userManager = UserManager.getInstance();
+    private UserViewModel userViewModel;
     private FragmentGameBinding binding;
     private GraphicEngineOfLabyrinth graphicEngineOfLabyrinth;
     private PhysicEngineOfLabyrinth physicEngineOfLabyrinth;
@@ -49,6 +53,8 @@ public class GameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UserViewModelFactory factory = UserViewModelFactory.getInstance(requireContext().getApplicationContext());
+        userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
 
     }
 
@@ -118,22 +124,36 @@ public class GameFragment extends Fragment {
 
         initGameComponents();
 
-        physicEngineOfLabyrinth.setScoreChangeListener(newScore -> {
-            updateScoreDisplay(newScore);
-            FirebaseUser currentUser = userManager.getCurrentUser();
-            if (currentUser != null) {
-                String uid = currentUser.getUid();
-                userManager.updateScore(uid,newScore);
+        userViewModel.getCurrentUser().observe(getViewLifecycleOwner(), resource -> {
+            if (resource != null && resource.status == Resource.Status.SUCCESS) {
+                FirebaseUser currentUser = resource.data;
+                if (currentUser != null) {
+                    String uid = currentUser.getUid();
+                    userViewModel.getUserData(uid).observe(getViewLifecycleOwner(), userDataResource -> {
+                        if (userDataResource != null && userDataResource.status == Resource.Status.SUCCESS) {
+                            DocumentSnapshot documentSnapshot = userDataResource.data;
+                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                User user = documentSnapshot.toObject(User.class);
+                                if (user != null) {
+                                    updateScoreDisplay(user.getScore());
+                                }
+                            } else {
+                                Log.e("GameFragment", getString(R.string.documentsnapshot_is_null_or_doesn_t_exist));
+                            }
+                        } else {
+                            Log.e("GameFragment", getString(R.string.Error_data_recuperation));
+                        }
+                    });
+
+                    physicEngineOfLabyrinth.setScoreChangeListener(newScore -> {
+                        updateScoreDisplay(newScore);
+                        userViewModel.updateScore(uid, newScore).observe(getViewLifecycleOwner(), scoreUpdateResource -> {
+                            // Gérer le succès ou l'échec de la mise à jour du score
+                        });
+                    });
+                }
             }
-
         });
-
-        FirebaseUser currentUser = userManager.getCurrentUser();
-        String uid = currentUser.getUid();
-        userManager.getUserData(uid).addOnSuccessListener(documentSnapshot -> {
-            User user = documentSnapshot.toObject(User.class);
-            updateScoreDisplay(user.getScore());
-        }).addOnFailureListener(e -> Log.e("GameFragment", getString(R.string.Error_data_recuperation), e));
     }
 
 

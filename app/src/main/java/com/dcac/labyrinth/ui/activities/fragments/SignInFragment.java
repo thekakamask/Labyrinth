@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.InputType;
@@ -26,13 +27,14 @@ import android.widget.Toast;
 
 import com.dcac.labyrinth.R;
 import com.dcac.labyrinth.databinding.FragmentSignInBinding;
+import com.dcac.labyrinth.injection.UserViewModelFactory;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.dcac.labyrinth.viewModels.UserManager;
+import com.dcac.labyrinth.viewModels.UserViewModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,15 +48,19 @@ public class SignInFragment extends Fragment {
 
     private FragmentSignInBinding binding;
 
-    private UserManager userManager = UserManager.getInstance();
-
+    //private UserManager userManager = UserManager.getInstance();
+    //JE PEUX PLUTOT PASSER L'INSTANCE DU USERMANAGER EN ARGUMENT DU FRAGMENT (LIGNE56)
+    // ENLEVER LE STATIC DU FRAGMENT. FRAGMENT SET/FRAGMENT
+    // IL FAUT JUSTE RECUPERER L'INSTANCE USERMANAGER EN LA PASSANT EN ARGUMENT
+    // LORS DU LA CREATION DU FRAGMENT.
     private ActivityResultLauncher<Intent> signInOrUpLauncher;
 
     private FirebaseAuth mAuth;
 
+    private UserViewModel userViewModel;
+
     public static SignInFragment newInstance() {
-        SignInFragment fragment= new SignInFragment();
-        return fragment;
+        return new SignInFragment();
     }
 
     @Override
@@ -62,18 +68,36 @@ public class SignInFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAuth=FirebaseAuth.getInstance();
 
+        UserViewModelFactory factory = UserViewModelFactory.getInstance(requireContext().getApplicationContext());
+        userViewModel = new ViewModelProvider(this, factory).get(UserViewModel.class);
+
+
         signInOrUpLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         if (user != null) {
-
-                            userManager.createUser(user.getUid());
-                            showSnackBar(getString(R.string.connection_succeed));
-                            showWelcomeFragment();
-
+                            userViewModel.createUser(user.getUid()).observe(getViewLifecycleOwner(), resource -> {
+                                if (resource != null) {
+                                    switch (resource.status) {
+                                        case SUCCESS:
+                                            if (resource.data != null && resource.data) {
+                                                showSnackBar(getString(R.string.connection_succeed));
+                                                showWelcomeFragment();
+                                            }
+                                            break;
+                                        case ERROR:
+                                            showSnackBar(getString(R.string.error_creating_user));
+                                            break;
+                                        case LOADING:
+                                            // Optionnel: afficher un indicateur de chargement
+                                            break;
+                                    }
+                                } else {
+                                    // Gérer le cas où resource est null, si nécessaire
+                                }
+                            });
                         }
                     } else {
                         IdpResponse response = IdpResponse.fromResultIntent(result.getData());
