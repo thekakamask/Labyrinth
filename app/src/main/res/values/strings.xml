@@ -76,7 +76,8 @@
     <string name="deconnection_failed">Deconnection failed</string>
     <string name="invalid_image_url">Invalid image url</string>
     <string name="invalid_username">Invalid username</string>
-
+    <string name="username_changed">Username changed</string>
+    <string name="profile_image_changed">Profile image changed</string>
     <!-- UserRepository -->
     <string name="unknown_error">Unknown error</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -87,4 +88,7 @@
     <string name="password_edit_text_sign_in_fragment">Password</string>
     <string name="text_sign_up_sign_in_fragment">Don\'t have an account? Sign Up</string>
     <string name="authentication_failed">Authentication failed.</string>
+    <string name="failed_to_update_image">Failed to update image</string>
+    <string name="creation_succeed">Account creation success</string>
+    <string name="account_deleted_success">Account is deleted</string>
 </resources>

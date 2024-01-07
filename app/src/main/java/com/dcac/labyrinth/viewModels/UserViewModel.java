@@ -80,32 +80,38 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<Resource<Void>> signOut() {
         MutableLiveData<Resource<Void>> liveData = new MutableLiveData<>();
-        liveData.setValue(Resource.loading(null));
+        liveData.setValue(Resource.loading(null));  // Indique que la déconnexion est en cours
 
-        Observer<Void> observer = result -> {
-            if (result != null) {
-                liveData.setValue(Resource.success(null));
-            } else {
-                liveData.setValue(Resource.error("Error signing out", null));
+        LiveData<Resource<Void>> signOutResult = userRepository.signOut();
+        signOutResult.observeForever(result -> {
+            if (result != null && result.status == Resource.Status.SUCCESS) {
+                liveData.setValue(Resource.success(null)); // Déconnexion réussie
+            } else if (result != null && result.status == Resource.Status.ERROR) {
+                liveData.setValue(Resource.error(result.message, null)); // Déconnexion échouée
             }
-        };
-        observeForever(userRepository.signOut(), observer);
+        });
+
         return liveData;
     }
 
 
     public LiveData<Resource<Void>> deleteUser() {
+        // Obtient directement la LiveData<Resource<Void>> de UserRepository
+        LiveData<Resource<Void>> deleteUserResult = userRepository.deleteUser();
+
+        // Crée une nouvelle MutableLiveData pour envoyer les mises à jour
         MutableLiveData<Resource<Void>> liveData = new MutableLiveData<>();
         liveData.setValue(Resource.loading(null));
 
-        Observer<Void> observer = result -> {
-            if (result != null) {
+        // S'abonne à la LiveData renvoyée par UserRepository
+        deleteUserResult.observeForever(result -> {
+            if (result != null && result.status == Resource.Status.SUCCESS) {
                 liveData.setValue(Resource.success(null));
-            } else {
-                liveData.setValue(Resource.error("Error deleting user", null));
+            } else if (result != null && result.status == Resource.Status.ERROR) {
+                liveData.setValue(Resource.error(result.message, null));
             }
-        };
-        observeForever(userRepository.deleteUser(), observer);
+        });
+
         return liveData;
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dcac.labyrinth.data.models.User;
+import com.dcac.labyrinth.data.utils.Resource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -97,13 +98,14 @@ public class UserRepository {
         return liveData;
     }
 
-    public LiveData<Void> signOut() {
+    public LiveData<Resource<Void>> signOut() {
         return authService.signOut();
     }
 
-    public LiveData<Void> deleteUser() {
+    public LiveData<Resource<Void>> deleteUser() {
         return authService.deleteUser();
     }
+
 
     /*public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();

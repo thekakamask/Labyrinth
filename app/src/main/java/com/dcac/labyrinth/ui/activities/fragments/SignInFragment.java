@@ -83,7 +83,7 @@ public class SignInFragment extends Fragment {
                                     switch (resource.status) {
                                         case SUCCESS:
                                             if (resource.data != null && resource.data) {
-                                                showSnackBar(getString(R.string.connection_succeed));
+                                                showSnackBar(getString(R.string.creation_succeed));
                                                 showWelcomeFragment();
                                             }
                                             break;
@@ -206,6 +206,7 @@ public class SignInFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d("SignIn", "signInWithEmail:success");
+                        showSnackBar(getString(R.string.connection_succeed));
                         showWelcomeFragment();
                     } else {
                         Log.w("SignIn", "signInWithEmail:failure", task.getException());

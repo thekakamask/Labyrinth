@@ -18,25 +18,6 @@ public class Resource<T>{
         this.message = message;
     }
 
-    private <T> MutableLiveData<Resource<T>> createResourceLiveData() {
-        return new MutableLiveData<>();
-    }
-
-    private <T> void updateResourceLiveData(MutableLiveData<Resource<T>> liveData, Status status, T data, String message) {
-        switch (status) {
-            case SUCCESS:
-                liveData.setValue(Resource.success(data));
-                break;
-            case ERROR:
-                liveData.setValue(Resource.error(message, data));
-                break;
-            case LOADING:
-                liveData.setValue(Resource.loading(data));
-                break;
-        }
-
-    }
-
     public static <T> Resource<T> success(T data) {
         return new Resource<>(Status.SUCCESS, data, null);
     }

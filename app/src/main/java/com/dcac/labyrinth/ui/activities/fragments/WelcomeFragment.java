@@ -4,6 +4,7 @@ package com.dcac.labyrinth.ui.activities.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -207,6 +208,23 @@ public class WelcomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateLoginStatus();
+        checkForActionsAndShowSnackbar();
+    }
+
+    private void checkForActionsAndShowSnackbar() {
+        SharedPreferences prefs = getActivity().getSharedPreferences("AppSettingsPrefs", Context.MODE_PRIVATE);
+        String action = prefs.getString("LastAction", "");
+
+        if (action.equals("LoggedOut")) {
+            loginShowSnackBar(getString(R.string.logged_out));
+        } else if (action.equals("AccountDeleted")) {
+            loginShowSnackBar(getString(R.string.account_deleted_success));
+        }
+
+        // Nettoyer les préférences après affichage
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("LastAction");
+        editor.apply();
     }
 
 
@@ -283,7 +301,7 @@ public class WelcomeFragment extends Fragment {
         FragmentManager fragmentManager= getParentFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         ScoreFragment scoreFragment= ScoreFragment.newInstance();
-        fragmentTransaction.add(R.id.fragment_container, scoreFragment);
+        fragmentTransaction.replace(R.id.fragment_container, scoreFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -292,7 +310,7 @@ public class WelcomeFragment extends Fragment {
         FragmentManager fragmentManager= getParentFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         GameFragment gameFragment= GameFragment.newInstance();
-        fragmentTransaction.add(R.id.fragment_container, gameFragment);
+        fragmentTransaction.replace(R.id.fragment_container, gameFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -306,7 +324,7 @@ public class WelcomeFragment extends Fragment {
         FragmentManager fragmentManager= getParentFragmentManager();
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         SignInFragment signInFragment= SignInFragment.newInstance();
-        fragmentTransaction.add(R.id.fragment_container, signInFragment);
+        fragmentTransaction.replace(R.id.fragment_container, signInFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
